@@ -342,9 +342,24 @@ public final class ExtensionFactory<T> {
 
   /* static over */
 
+  /**
+   * Supported extension's type. One ExtensionFactory just handle one type extension.
+   */
   private final Class<T> supportedExtension;
+
+  /**
+   * Cache of singleton extension's instance. Prototype extension would not use this field.
+   */
   private final Map<String, T> extensionMap;
+
+  /**
+   * Cache of implements class of this extension.
+   */
   private final Map<String, Class<? extends T>> extensionClassMap;
+
+  /**
+   * Singleton or Prototype
+   */
   private final Scope scope;
 
   public ExtensionFactory(Class<T> supportedExtension) {
@@ -359,10 +374,20 @@ public final class ExtensionFactory<T> {
     scope = spi.scope();
   }
 
+  /**
+   * @return supported-extension of this ExtensionFactory.
+   */
   public Class<T> getSupportedExtension() {
     return supportedExtension;
   }
 
+  /**
+   * Register an implement's instance of supported-extension into cache.
+   *
+   * @param name      the name of this implement
+   * @param extension implement instance
+   * @throws DuplicatedExtensionException If name is already exist.
+   */
   @SuppressWarnings("unchecked")
   public void register(String name, T extension) {
     Objects.requireNonNull(name, "null name");
@@ -373,6 +398,14 @@ public final class ExtensionFactory<T> {
     extensionClassMap.putIfAbsent(name, (Class<? extends T>) extension.getClass());
   }
 
+  /**
+   * Register a class of supported-extension. This method would not instantiate the class of
+   * implement.
+   *
+   * @param name           the name of this implement
+   * @param extensionClass implement instance
+   * @throws DuplicatedExtensionException If name is already exist.
+   */
   public void register(String name, Class<? extends T> extensionClass) {
     Objects.requireNonNull(name, "null name");
     if (extensionClassMap.containsKey(name)) {
@@ -388,7 +421,7 @@ public final class ExtensionFactory<T> {
    *
    * @param name extension name
    * @return extension instance of required name.
-   * @throws ExtensionNotFoundException
+   * @throws ExtensionNotFoundException If name is not exist.
    */
   public T getExtension(String name) {
     if (scope == Scope.PROTOTYPE) {
@@ -403,9 +436,10 @@ public final class ExtensionFactory<T> {
   /**
    * Get an singleton instance of an extension.
    *
-   * @param name extension name.
+   * @param name extension's name.
    * @param args extension's constructor's arguments.
    * @return an instance of extension.
+   * @throws ExtensionNotFoundException If name is not exist.
    */
   private T getExtensionSingleton(String name, Object... args) {
     Objects.requireNonNull(name, "null name");
@@ -434,6 +468,7 @@ public final class ExtensionFactory<T> {
    * @param name extension name.
    * @param args extension's constructor's arguments.
    * @return an instance of extension.
+   * @throws ExtensionNotFoundException If name is not exist.
    */
   private T getExtensionPrototype(String name, Object... args) {
     Objects.requireNonNull(name, "null name");

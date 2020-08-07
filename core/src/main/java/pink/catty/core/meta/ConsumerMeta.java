@@ -39,6 +39,9 @@ public class ConsumerMeta extends ClientMeta {
   private int retryTimes;
   private int recoveryPeriod = 3 * 1000;
 
+
+  private int weight = 100;
+
   public ConsumerMeta() {
     super(MetaType.CONSUMER);
   }

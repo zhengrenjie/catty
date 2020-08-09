@@ -195,6 +195,5 @@ public class CattyProtocol implements Protocol {
     }
     return consumer;
   }
+
 }
-
-

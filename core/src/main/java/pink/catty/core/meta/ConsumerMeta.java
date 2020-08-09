@@ -39,7 +39,9 @@ public class ConsumerMeta extends ClientMeta {
   private int retryTimes;
   private int recoveryPeriod = 3 * 1000;
 
-
+  /**
+   * This consumer's weight. Default by 100, suggesting you to use it between 0 and 100.
+   */
   private int weight = 100;
 
   public ConsumerMeta() {
@@ -139,5 +141,13 @@ public class ConsumerMeta extends ClientMeta {
 
   public void setFilterNames(List<String> filterNames) {
     this.filterNames = filterNames;
+  }
+
+  public int getWeight() {
+    return weight;
+  }
+
+  public void setWeight(int weight) {
+    this.weight = weight;
   }
 }

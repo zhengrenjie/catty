@@ -34,21 +34,22 @@ import pink.catty.core.service.ServiceModel;
 import pink.catty.core.utils.ReflectUtils;
 
 /**
+ * This class is mainly for inner usage.
+ * <p>
  * Meta info contains the whole structured information and information enters about an {@link
  * pink.catty.core.invoker.Invoker} which mains an Invoker could be described from a MetaInfo and
  * could be rebuild from a MetaInfo.
- *
- * This class is mainly for inner usage.
- *
+ * <p>
  * As {@link pink.catty.core.invoker.Provider} and {@link pink.catty.core.invoker.Consumer} could be
  * registered to {@link pink.catty.core.extension.spi.Registry} and could be build from the
  * registered info, {@link MetaInfo} should be easily formatted to String or rebuild from String.
- * And as there are lots of uncertain subclass of this class, I use reflect to format every fields
- * (include parent classes) to String as "optionsA:a;optionB:b;.....optionN:n;" pattern, and also
- * use {@link Introspector} to rebuild MetaInfo from a String with auto-type-conversion.
- *
+ * And as there are lots of uncertain subclass of this class, this class use reflect to format every
+ * fields (include parent classes) to String as a certain pattern, and also use {@link Introspector}
+ * to rebuild MetaInfo from a String with auto-type-conversion. You can use {@link MetaOption} to
+ * control the behavior when serialize and deserialize.
+ * <p>
  * {@link MetaInfo} is an abstract class that supports custom meta info to ensure the scalability.
- *
+ * <p>
  * Each field type should be simple enough to convert with String, if could not, it should be
  * treated specially in formatting and rebuilding.
  *
@@ -58,8 +59,8 @@ import pink.catty.core.utils.ReflectUtils;
  * @see ConsumerMeta
  * @see ServerMeta
  * @see ProviderMeta
- *
  * @see MetaInfo#toString(MetaInfo)
+ * @see MetaOption
  */
 public abstract class MetaInfo {
 

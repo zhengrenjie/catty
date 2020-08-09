@@ -14,7 +14,7 @@
  */
 package pink.catty.core.extension.spi;
 
-@SPI
+@SPI(scope = Scope.SINGLETON)
 public interface Serialization {
 
   byte[] serialize(Object object);

@@ -25,7 +25,7 @@ import pink.catty.core.meta.ProviderMeta;
  * also defines how to serialization, ha, load-balance, and so on. So Protocol is a class to define
  * how Consumer & Provider looks like, further more, to build Consumer & Provider from MetaInfo.
  */
-@SPI
+@SPI(scope = Scope.SINGLETON)
 public interface Protocol {
 
   Consumer buildConsumer(ConsumerMeta metaInfo);

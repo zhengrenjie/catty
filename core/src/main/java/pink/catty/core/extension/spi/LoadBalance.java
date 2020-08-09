@@ -20,7 +20,7 @@ import pink.catty.core.invoker.Invoker;
 /**
  * LoadBalance is an SPI for client cluster.
  */
-@SPI
+@SPI(scope = Scope.SINGLETON)
 public interface LoadBalance {
 
   <T extends Invoker> T select(List<T> invokers);

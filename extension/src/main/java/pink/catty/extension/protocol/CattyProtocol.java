@@ -47,6 +47,29 @@ public class CattyProtocol implements Protocol {
   @Override
   public Consumer buildConsumer(ConsumerMeta meta) {
 
+    ServiceModel serviceModel = meta.getServiceModel();
+
+    /*
+     * If only one remote address is specified, CattyProtocol will not create cluster.
+     */
+    if (meta.getDirectAddress() != null && meta.getDirectAddress().size() == 1) {
+
+      // copy meta
+      String metaString = meta.toString();
+      ConsumerMeta newMetaInfo = MetaInfo.parseOf(metaString, ConsumerMeta.class, serviceModel);
+
+      // set address
+      ServerAddress address = meta.getDirectAddress().get(0);
+      newMetaInfo.setRemoteIp(address.getIp());
+      newMetaInfo.setRemotePort(address.getPort());
+
+      return createConsumerLink(newMetaInfo);
+    }
+
+    /*
+     * Else, if more than one remote address is specified, CattyProtocol will create a cluster.
+     */
+
     // 1.Create Cluster
     Cluster cluster = ExtensionFactory.cluster().getExtension(meta.getCluster());
 
@@ -57,7 +80,6 @@ public class CattyProtocol implements Protocol {
     Consumer consumer = new ConsumerCluster(meta, cluster, loadBalance);
 
     // 4.Check if direct address set. Build Cluster.
-    ServiceModel serviceModel = meta.getServiceModel();
     if (meta.getDirectAddress() != null && meta.getDirectAddress().size() > 0) {
       String metaString = meta.toString();
       for (ServerAddress address : meta.getDirectAddress()) {
@@ -66,23 +88,7 @@ public class CattyProtocol implements Protocol {
         newMetaInfo.setRemoteIp(address.getIp());
         newMetaInfo.setRemotePort(address.getPort());
 
-        // Create ConsumerClient.
-        EndpointFactory factory = ExtensionFactory
-            .endpointFactory()
-            .getExtension(newMetaInfo.getEndpoint());
-        Client client = factory.getClient(newMetaInfo);
-        toRegister = new ConsumerClient(client, newMetaInfo);
-
-        // Create SerializationConsumer
-        Serialization serialization = ExtensionFactory
-            .serialization()
-            .getExtension(newMetaInfo.getSerialization());
-        toRegister = new ConsumerSerialization(toRegister, serialization);
-
-        // Create HealthCheckConsumer
-        if (newMetaInfo.getHealthCheckPeriod() > 0) {
-          toRegister = new ConsumerHealthCheck(toRegister);
-        }
+        toRegister = createConsumerLink(newMetaInfo);
 
         // Wrap Filter
         if (newMetaInfo.getFilterNames() != null && newMetaInfo.getFilterNames().size() > 0) {
@@ -168,4 +174,27 @@ public class CattyProtocol implements Protocol {
 
     return new ProviderSerialization(provider, serialization);
   }
+
+  private Consumer createConsumerLink(ConsumerMeta consumerMeta) {
+    // Create ConsumerClient.
+    EndpointFactory factory = ExtensionFactory
+        .endpointFactory()
+        .getExtension(consumerMeta.getEndpoint());
+    Client client = factory.getClient(consumerMeta);
+    Consumer consumer = new ConsumerClient(client, consumerMeta);
+
+    // Create SerializationConsumer
+    Serialization serialization = ExtensionFactory
+        .serialization()
+        .getExtension(consumerMeta.getSerialization());
+    consumer = new ConsumerSerialization(consumer, serialization);
+
+    // Create HealthCheckConsumer
+    if (consumerMeta.getHealthCheckPeriod() > 0) {
+      consumer = new ConsumerHealthCheck(consumer);
+    }
+    return consumer;
+  }
 }
+
+

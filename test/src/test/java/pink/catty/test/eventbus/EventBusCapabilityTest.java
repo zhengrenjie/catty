@@ -12,20 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.example.extension;
+package pink.catty.test.eventbus;
 
-import java.util.List;
-import pink.catty.core.extension.spi.LoadBalance;
-import pink.catty.core.invoker.Invoker;
-import pink.catty.extension.loadbalance.RandomLoadBalance;
+import org.junit.Assert;
+import org.junit.Test;
+import pink.catty.core.eventbus.EventBuses;
 
-public class MyLoadBalance implements LoadBalance {
+public class EventBusCapabilityTest {
 
-  private RandomLoadBalance loadBalance = new RandomLoadBalance();
-
-  @Override
-  public <T extends Invoker> T select(List<T> invokers) {
-    System.out.println("my lb");
-    return loadBalance.select(invokers);
+  @Test
+  public void testSync() {
+    EventBuses.SYNC.register(new Listener1());
+    Event1 evnet1 = new Event1();
+    evnet1.setName("test");
+    EventBuses.SYNC.post(evnet1);
+    Assert.assertEquals(Listener1.AFTER_EVENT_POST, evnet1.getName());
   }
+
 }

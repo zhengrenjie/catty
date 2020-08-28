@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.example.extension;
+package pink.catty.example.spi;
 
 import java.util.List;
 import pink.catty.core.extension.spi.LoadBalance;
@@ -25,7 +25,7 @@ public class MyLoadBalance implements LoadBalance {
 
   @Override
   public <T extends Invoker> T select(List<T> invokers) {
-    System.out.println("my lb");
+    System.out.println("my spi lb");
     return loadBalance.select(invokers);
   }
 }

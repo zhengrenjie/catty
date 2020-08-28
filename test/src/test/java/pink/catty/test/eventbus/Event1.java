@@ -12,20 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.example.extension;
+package pink.catty.test.eventbus;
 
-import java.util.List;
-import pink.catty.core.extension.spi.LoadBalance;
-import pink.catty.core.invoker.Invoker;
-import pink.catty.extension.loadbalance.RandomLoadBalance;
+public class Event1 {
 
-public class MyLoadBalance implements LoadBalance {
+  private String name;
 
-  private RandomLoadBalance loadBalance = new RandomLoadBalance();
+  public String getName() {
+    return name;
+  }
 
-  @Override
-  public <T extends Invoker> T select(List<T> invokers) {
-    System.out.println("my lb");
-    return loadBalance.select(invokers);
+  public void setName(String name) {
+    this.name = name;
   }
 }

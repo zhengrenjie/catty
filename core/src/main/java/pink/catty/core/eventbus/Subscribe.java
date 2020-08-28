@@ -12,32 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config.define;
+package pink.catty.core.eventbus;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public final class Definitions {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface Subscribe {
 
-  private final Map<String, ConfigDefine> defineMap;
-
-  public Definitions() {
-    this.defineMap = new HashMap<>();
-  }
-
-  public ConfigDefine getConfigDefine(String key) {
-    return defineMap.get(key);
-  }
-
-  public void addConfigDefine(String key, ConfigDefine define) {
-    defineMap.put(key, define);
-  }
-
-  public boolean containsName(String name) {
-    return defineMap.containsKey(name);
-  }
-
-  public void removeDefine(String key) {
-    defineMap.remove(key);
-  }
 }

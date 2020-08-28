@@ -14,7 +14,7 @@
  */
 package pink.catty.spring.bean;
 
-import pink.catty.config.ProtocolConfig;
+import pink.catty.config.api.ProtocolConfig;
 
 public class ProtocolConfigBean<T> extends ProtocolConfig {
 

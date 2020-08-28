@@ -22,8 +22,8 @@ import pink.catty.core.invoker.endpoint.Client;
 import pink.catty.core.invoker.endpoint.Server;
 import pink.catty.core.meta.ClientMeta;
 import pink.catty.core.meta.ServerMeta;
-import pink.catty.invokers.endpoint.NettyClient;
-import pink.catty.invokers.endpoint.NettyServer;
+import pink.catty.extension.factory.netty.NettyClient;
+import pink.catty.extension.factory.netty.NettyServer;
 
 @Extension(EndpointFactoryType.NETTY)
 public class NettyEndpointFactory extends AbstractEndpointFactory {

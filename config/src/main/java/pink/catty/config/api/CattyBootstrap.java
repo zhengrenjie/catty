@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config;
+package pink.catty.config.api;
 
 /**
  * Catty Bootstrap API. If you use spring to config catty, this class may be useless.

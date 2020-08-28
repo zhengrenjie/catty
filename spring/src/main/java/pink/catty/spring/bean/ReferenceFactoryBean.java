@@ -17,7 +17,7 @@ package pink.catty.spring.bean;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
-import pink.catty.config.Reference;
+import pink.catty.config.api.Reference;
 
 public class ReferenceFactoryBean<T> extends Reference<T> implements FactoryBean<T>,
     InitializingBean, DisposableBean {

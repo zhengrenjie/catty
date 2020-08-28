@@ -14,9 +14,9 @@
  */
 package pink.catty.example.pb;
 
-import pink.catty.config.ProtocolConfig;
-import pink.catty.config.Reference;
-import pink.catty.config.ClientConfig;
+import pink.catty.config.api.ProtocolConfig;
+import pink.catty.config.api.Reference;
+import pink.catty.config.api.ClientConfig;
 import pink.catty.core.extension.ExtensionType.SerializationType;
 import pink.catty.example.pb.generated.EchoProtocol;
 import pink.catty.example.pb.generated.EchoProtocol.Request;

@@ -17,11 +17,11 @@ package pink.catty.benchmark;
 import pink.catty.benchmark.common.PojoWrkGateway;
 import pink.catty.benchmark.service.PojoService;
 import pink.catty.benchmark.service.PojoServiceImpl;
-import pink.catty.config.ClientConfig;
-import pink.catty.config.Exporter;
-import pink.catty.config.ProtocolConfig;
-import pink.catty.config.Reference;
-import pink.catty.config.ServerConfig;
+import pink.catty.config.api.ClientConfig;
+import pink.catty.config.api.Exporter;
+import pink.catty.config.api.ProtocolConfig;
+import pink.catty.config.api.Reference;
+import pink.catty.config.api.ServerConfig;
 
 public class Benchmark {
 

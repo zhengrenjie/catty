@@ -15,9 +15,9 @@
 package pink.catty.example.async;
 
 import java.util.concurrent.CompletableFuture;
-import pink.catty.config.ClientConfig;
-import pink.catty.config.ProtocolConfig;
-import pink.catty.config.Reference;
+import pink.catty.config.api.ClientConfig;
+import pink.catty.config.api.ProtocolConfig;
+import pink.catty.config.api.Reference;
 import pink.catty.example.IService;
 
 public class Client {

@@ -14,7 +14,7 @@
  */
 package pink.catty.example.sample;
 
-import pink.catty.config.CattyBootstrap;
+import pink.catty.config.api.CattyBootstrap;
 import pink.catty.example.IService;
 
 import java.util.concurrent.TimeUnit;

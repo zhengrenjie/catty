@@ -15,9 +15,9 @@
 package pink.catty.example.multi_server;
 
 import java.util.concurrent.TimeUnit;
-import pink.catty.config.ClientConfig;
-import pink.catty.config.ProtocolConfig;
-import pink.catty.config.Reference;
+import pink.catty.config.api.ClientConfig;
+import pink.catty.config.api.ProtocolConfig;
+import pink.catty.config.api.Reference;
 import pink.catty.core.extension.ExtensionType.ClusterType;
 
 public class Client {

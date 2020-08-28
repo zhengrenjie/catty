@@ -14,9 +14,9 @@
  */
 package pink.catty.example.pb;
 
-import pink.catty.config.Exporter;
-import pink.catty.config.ProtocolConfig;
-import pink.catty.config.ServerConfig;
+import pink.catty.config.api.Exporter;
+import pink.catty.config.api.ProtocolConfig;
+import pink.catty.config.api.ServerConfig;
 import pink.catty.core.extension.ExtensionType.SerializationType;
 
 public class Server {

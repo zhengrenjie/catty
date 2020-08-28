@@ -14,7 +14,7 @@
  */
 package pink.catty.spring.bean;
 
-import pink.catty.config.ServerConfig;
+import pink.catty.config.api.ServerConfig;
 
 public class ServerConfigBean extends ServerConfig {
 

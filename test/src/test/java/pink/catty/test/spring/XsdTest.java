@@ -18,9 +18,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import pink.catty.config.ClientConfig;
-import pink.catty.config.ProtocolConfig;
-import pink.catty.config.ServerConfig;
+import pink.catty.config.api.ClientConfig;
+import pink.catty.config.api.ProtocolConfig;
+import pink.catty.config.api.ServerConfig;
 import pink.catty.core.ServerAddress;
 
 public class XsdTest {

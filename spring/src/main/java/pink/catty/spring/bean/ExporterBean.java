@@ -17,7 +17,7 @@ package pink.catty.spring.bean;
 import java.util.List;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import pink.catty.config.Exporter;
+import pink.catty.config.api.Exporter;
 
 public class ExporterBean extends Exporter implements InitializingBean, DisposableBean {
 

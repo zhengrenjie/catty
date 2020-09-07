@@ -14,11 +14,6 @@
  */
 package pink.catty.config.api;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import pink.catty.core.config.ConfigException;
 import pink.catty.core.config.definition.ConsumerDefinition;
 import pink.catty.core.config.definition.Define;
 import pink.catty.core.extension.ExtensionType.EndpointFactoryType;
@@ -37,7 +32,8 @@ public final class ConsumerConfig {
    */
   public static ConsumerConfigBuilder builder() {
     ConsumerConfigBuilder builder = new ConsumerConfigBuilder();
-    prepareBuilder(builder);
+    ConfigBuilderHelper
+        .prepareBuilder(builder, ConsumerConfig.class, ConsumerDefinition.getDefinition());
     return builder;
   }
 
@@ -359,59 +355,5 @@ public final class ConsumerConfig {
 
   public String getRegistryAddress() {
     return registryAddress;
-  }
-
-  private static void prepareBuilder(ConsumerConfigBuilder builder) {
-    Class<ConsumerConfig> configClz = ConsumerConfig.class;
-    Class<ConsumerConfigBuilder> builderClz = ConsumerConfigBuilder.class;
-
-    /*
-     * prepare setting-methods of builder.
-     */
-    Map<String, Method> methodMap = new HashMap<>();
-    for (Method method : builderClz.getMethods()) {
-      String methodName = method.getName();
-      if (methodName.startsWith("set")) {
-        methodMap.put(methodName, method);
-      }
-    }
-
-    /*
-     * invoke setting-methods to set default value
-     */
-    for (Field field : configClz.getFields()) {
-      if (!field.isAnnotationPresent(Define.class)) {
-        continue;
-      }
-
-      /*
-       * get setting-method
-       */
-      String methodName =
-          "set" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
-      if (!methodMap.containsKey(methodName)) {
-        throw new ConfigException("Set-Method not in Builder: " + methodName);
-      }
-      Method setMethod = methodMap.get(methodName);
-
-      /*
-       * get default value;
-       */
-      Define define = field.getAnnotation(Define.class);
-      String configDefinitionName = define.value();
-      Object defaultValue = ConsumerDefinition
-          .getConfigDefine(configDefinitionName)
-          .getDefaultValue();
-
-      /*
-       * invoke setting-method of builder
-       */
-      try {
-        setMethod.invoke(builder, defaultValue);
-      } catch (Exception e) {
-        throw new ConfigException(
-            "Error occurred when invoking set-method of builder: " + setMethod, e);
-      }
-    }
   }
 }

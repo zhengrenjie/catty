@@ -74,7 +74,7 @@ public class ConsumerDefinition {
    * @see pink.catty.core.extension.spi.EndpointFactory
    * @see EndpointFactoryType
    */
-  public static final String CLIENT_TYPE = "consumer.client.client_type";
+  public static final String CLIENT_TYPE = "consumer.client.type";
 
 
   /* ****************************
@@ -150,7 +150,7 @@ public class ConsumerDefinition {
   /**
    * Filter list.
    */
-  public static final String FILTER_LIST = "consumer.filter_list";
+  public static final String FILTER_LIST = "consumer.filter";
 
 
   /* ****************************
@@ -356,6 +356,10 @@ public class ConsumerDefinition {
         .withName(REGISTRY_ADDRESS)
         .withType(Type.STRING)
         .done();
+  }
+
+  public static Definition getDefinition() {
+    return DEFINITION;
   }
 
   public static ConfigDefine getConfigDefine(String key) {

@@ -42,7 +42,7 @@ public final class ConfigDefine {
   private String description;
   private Type type;
   private Object defaultValue = NO_DEFAULT_VALUE;
-  private Validator validator;
+  private Validator[] validators;
 
   private ConfigDefine(Definition definition) {
     this.definition = definition;
@@ -72,8 +72,8 @@ public final class ConfigDefine {
     return this;
   }
 
-  public ConfigDefine withValidator(Validator validator) {
-    this.validator = validator;
+  public ConfigDefine withValidator(Validator... validators) {
+    this.validators = validators;
     return this;
   }
 
@@ -124,8 +124,10 @@ public final class ConfigDefine {
     }
     checkValueType(value);
 
-    if (validator != null) {
-      validator.check(this, value);
+    if (validators != null) {
+      for(Validator validator : validators) {
+        validator.check(this, value);
+      }
     }
   }
 

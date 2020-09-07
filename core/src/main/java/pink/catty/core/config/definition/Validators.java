@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config.define;
+package pink.catty.core.config.definition;
 
 import java.util.List;
-import pink.catty.config.define.ConfigDefine.Validator;
+import pink.catty.core.config.definition.ConfigDefine.Validator;
 
 public enum Validators implements Validator {
 

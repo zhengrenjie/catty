@@ -12,11 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config.define;
+package pink.catty.core.config.definition;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import pink.catty.config.define.ConfigDefine.Type;
+import pink.catty.core.config.definition.ConfigDefine.Type;
 import pink.catty.core.extension.ExtensionType.ClusterType;
 import pink.catty.core.extension.ExtensionType.CodecType;
 import pink.catty.core.extension.ExtensionType.EndpointFactoryType;
@@ -24,7 +24,7 @@ import pink.catty.core.extension.ExtensionType.LoadBalanceType;
 import pink.catty.core.extension.ExtensionType.ProtocolType;
 import pink.catty.core.extension.ExtensionType.SerializationType;
 
-public class ConsumerConfig {
+public class ConsumerDefinition {
 
   /* ****************
    *     Client
@@ -33,16 +33,15 @@ public class ConsumerConfig {
   /**
    * Client connect timeout. ms
    */
-  public static final String CONNECT_TIMEOUT = "consumer.client.connect_timeout";
+  public static final String CONNECT_TIMEOUT = "consumer.client.connect_timeout.ms";
 
   /**
    * Client read timeout. ms
    */
-  public static final String READ_TIMEOUT = "consumer.client.read_timeout";
+  public static final String READ_TIMEOUT = "consumer.client.read_timeout.ms";
 
   /**
-   * If REGISTRY_CONFIG is set, then use registry to get remote address first, or use direct
-   * address.
+   * If registry is set, then use registry to get remote address first, or use direct address.
    */
   public static final String DIRECT_ADDRESSES = "consumer.client.direct_addresses";
 
@@ -59,20 +58,23 @@ public class ConsumerConfig {
 
   /**
    * If USE_IO_THREAD == false, the client will create a worker thread pool to execute tasks.
-   * WORKER_MIN_NUM indicated the min thread number of worker thread pool.
+   * WORKER_MIN_NUM indicated the min thread number of worker thread pool. Otherwise this config
+   * will be ignored.
    */
   public static final String WORKER_MIN_NUM = "consumer.client.worker_min_number";
 
   /**
    * If USE_IO_THREAD == false, the client will create a worker thread pool to execute tasks.
-   * WORKER_MAX_NUM indicated the max thread number of worker thread pool.
+   * WORKER_MAX_NUM indicated the max thread number of worker thread pool. Otherwise this config
+   * will be ignored.
    */
   public static final String WORKER_MAX_NUM = "consumer.client.worker_max_number";
 
   /**
    * @see pink.catty.core.extension.spi.EndpointFactory
+   * @see EndpointFactoryType
    */
-  private static final String CLIENT_TYPE = "consumer.client.client_type";
+  public static final String CLIENT_TYPE = "consumer.client.client_type";
 
 
   /* ****************************
@@ -83,6 +85,7 @@ public class ConsumerConfig {
    * Which serialization to use.
    *
    * @see pink.catty.core.extension.spi.Serialization
+   * @see SerializationType
    */
   public static final String SERIALIZATION = "consumer.serialization";
 
@@ -90,6 +93,7 @@ public class ConsumerConfig {
    * Which codec to use.
    *
    * @see pink.catty.core.extension.spi.Codec
+   * @see CodecType
    */
   public static final String CODEC = "consumer.codec";
 
@@ -104,17 +108,19 @@ public class ConsumerConfig {
   public static final String USE_HEALTH_CHECK = "consumer.use_health_check";
 
   /**
-   * Period of health check.
+   * Period of health check. If useHealthCheck == false, this config will be ignored.
    */
   public static final String HEALTH_CHECK_PERIOD = "consumer.health_check_period";
 
   /**
    * @see pink.catty.core.extension.spi.LoadBalance
+   * @see LoadBalanceType
    */
   public static final String LOAD_BALANCE = "consumer.load_balance";
 
   /**
    * @see pink.catty.core.extension.spi.Cluster
+   * @see ClusterType
    */
   public static final String HA_STRATEGY = "consumer.ha_strategy";
 
@@ -128,7 +134,7 @@ public class ConsumerConfig {
    * If cluster type is fail-back, this config indicates the period of reconnecting. If cluster type
    * is NOT fail-back, this config will be ignored.
    */
-  public static final String FAIL_BACK_PERIOD = "consumer.fail_back_period";
+  public static final String FAIL_BACK_PERIOD = "consumer.fail_back_period.ms";
 
 
   /* ****************************
@@ -137,6 +143,7 @@ public class ConsumerConfig {
 
   /**
    * @see pink.catty.core.extension.spi.Protocol
+   * @see ProtocolType
    */
   public static final String PROTOCOL = "consumer.protocol";
 
@@ -169,7 +176,7 @@ public class ConsumerConfig {
    * The timeout of interface, every methods in this interface have the same timeout unless method
    * has specified its own timeout.
    */
-  public static final String INTERFACE_TIMEOUT = "consumer.interface.timeout";
+  public static final String INTERFACE_TIMEOUT = "consumer.interface.timeout.ms";
 
 
   /* ****************************
@@ -182,13 +189,13 @@ public class ConsumerConfig {
   public static final String REGISTRY_ADDRESS = "consumer.registry.address";
 
 
-  private static final Definitions DEFINITIONS;
+  private static final Definition DEFINITION;
 
   static {
-    DEFINITIONS = new Definitions();
+    DEFINITION = new Definition();
 
     // CONNECT_TIMEOUT
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(CONNECT_TIMEOUT)
         .withType(Type.INT)
         .withDefaultValue(1000)
@@ -196,7 +203,7 @@ public class ConsumerConfig {
         .done();
 
     // READ_TIMEOUT
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(READ_TIMEOUT)
         .withType(Type.INT)
         .withDefaultValue(1000)
@@ -204,28 +211,28 @@ public class ConsumerConfig {
         .done();
 
     // DIRECT_ADDRESS
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(DIRECT_ADDRESSES)
         .withType(Type.OBJECT)
         .withDefaultValue(Validators.MUST_LIST)
         .done();
 
     // IO_THREAD_NUMBER
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(IO_THREAD_NUMBER)
         .withType(Type.INT)
         .withDefaultValue(Runtime.getRuntime().availableProcessors() + 1)
         .done();
 
     // USE_WORKER_THREAD
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(USE_WORKER_THREAD)
         .withType(Type.BOOLEAN)
         .withDefaultValue(Boolean.FALSE)
         .done();
 
     // WORKER_MIN_NUM
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(WORKER_MIN_NUM)
         .withType(Type.INT)
         .withDefaultValue(Runtime.getRuntime().availableProcessors() * 2)
@@ -233,7 +240,7 @@ public class ConsumerConfig {
         .done();
 
     // WORKER_MAX_NUM
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(WORKER_MAX_NUM)
         .withType(Type.INT)
         .withDefaultValue(Runtime.getRuntime().availableProcessors() * 4)
@@ -241,35 +248,35 @@ public class ConsumerConfig {
         .done();
 
     // CLIENT_TYPE
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(CLIENT_TYPE)
         .withType(Type.STRING)
         .withDefaultValue(EndpointFactoryType.NETTY)
         .done();
 
     // SERIALIZATION
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(SERIALIZATION)
         .withType(Type.STRING)
         .withDefaultValue(SerializationType.HESSIAN2)
         .done();
 
     // CODEC
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(CODEC)
         .withType(Type.STRING)
         .withDefaultValue(CodecType.CATTY)
         .done();
 
     // USE_HEALTH_CHECK
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(USE_HEALTH_CHECK)
         .withType(Type.BOOLEAN)
         .withDefaultValue(Boolean.TRUE)
         .done();
 
     // HEALTH_CHECK_PERIOD
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(HEALTH_CHECK_PERIOD)
         .withType(Type.INT)
         .withDefaultValue(5000)
@@ -277,78 +284,94 @@ public class ConsumerConfig {
         .done();
 
     // LOAD_BALANCE
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(LOAD_BALANCE)
         .withType(Type.STRING)
         .withDefaultValue(LoadBalanceType.WEIGHTED_RANDOM)
         .done();
 
     // HA_STRATEGY
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(HA_STRATEGY)
         .withType(Type.STRING)
         .withDefaultValue(ClusterType.FAIL_FAST)
         .done();
 
     // RETRY_TIMES
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(RETRY_TIMES)
         .withType(Type.INT)
         .withDefaultValue(3)
         .done();
 
     // FAIL_BACK_PERIOD
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(FAIL_BACK_PERIOD)
         .withType(Type.INT)
         .withDefaultValue(3000)
         .done();
 
     // PROTOCOL
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(PROTOCOL)
         .withType(Type.STRING)
         .withDefaultValue(ProtocolType.CATTY)
         .done();
 
     // FILTER_LIST
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(FILTER_LIST)
         .withType(Type.OBJECT)
         .withDefaultValue(Validators.MUST_LIST)
         .done();
 
     // INTERFACE_CLASS
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(INTERFACE_CLASS)
         .withType(Type.OBJECT)
         .withValidator(Validators.MUST_CLASS)
         .done();
 
     // INTERFACE_NAME
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(INTERFACE_NAME)
         .withType(Type.STRING)
         .done();
 
     // INTERFACE_VERSION
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(INTERFACE_VERSION)
         .withType(Type.STRING)
         .done();
 
     // INTERFACE_TIMEOUT
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(INTERFACE_TIMEOUT)
         .withType(Type.INT)
         .withDefaultValue(1000)
         .done();
 
     // REGISTRY_ADDRESS
-    ConfigDefine.define(DEFINITIONS)
+    ConfigDefine.define(DEFINITION)
         .withName(REGISTRY_ADDRESS)
         .withType(Type.STRING)
         .done();
+  }
+
+  public static ConfigDefine getConfigDefine(String key) {
+    return DEFINITION.getConfigDefine(key);
+  }
+
+  public static void addConfigDefine(String key, ConfigDefine define) {
+    DEFINITION.addConfigDefine(key, define);
+  }
+
+  public static boolean containsName(String name) {
+    return DEFINITION.containsName(name);
+  }
+
+  public static void removeDefine(String key) {
+    DEFINITION.removeDefine(key);
   }
 
   /**
@@ -375,7 +398,7 @@ public class ConsumerConfig {
         throw new IllegalArgumentException("Setting's key must be String");
       }
 
-      ConfigDefine define = DEFINITIONS.getConfigDefine((String) config.getKey());
+      ConfigDefine define = DEFINITION.getConfigDefine((String) config.getKey());
       if (define == null) {
         throw new ValidException("Setting was not defined, setting: " + (String) config.getKey());
       }

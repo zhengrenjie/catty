@@ -12,30 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config.define;
+package pink.catty.config.api;
 
-/**
- * If check fail, this exception thrown.
- */
-public class ValidException extends RuntimeException {
+public class ProviderConfig {
 
-  public ValidException() {
-  }
-
-  public ValidException(String message) {
-    super(message);
-  }
-
-  public ValidException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  public ValidException(Throwable cause) {
-    super(cause);
-  }
-
-  public ValidException(String message, Throwable cause, boolean enableSuppression,
-      boolean writableStackTrace) {
-    super(message, cause, enableSuppression, writableStackTrace);
-  }
 }

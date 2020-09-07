@@ -12,32 +12,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config.define;
+package pink.catty.core.config.definition;
 
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * If check fail, this exception thrown.
+ */
+public class ValidException extends RuntimeException {
 
-public final class Definitions {
-
-  private final Map<String, ConfigDefine> defineMap;
-
-  public Definitions() {
-    this.defineMap = new HashMap<>();
+  public ValidException() {
   }
 
-  public ConfigDefine getConfigDefine(String key) {
-    return defineMap.get(key);
+  public ValidException(String message) {
+    super(message);
   }
 
-  public void addConfigDefine(String key, ConfigDefine define) {
-    defineMap.put(key, define);
+  public ValidException(String message, Throwable cause) {
+    super(message, cause);
   }
 
-  public boolean containsName(String name) {
-    return defineMap.containsKey(name);
+  public ValidException(Throwable cause) {
+    super(cause);
   }
 
-  public void removeDefine(String key) {
-    defineMap.remove(key);
+  public ValidException(String message, Throwable cause, boolean enableSuppression,
+      boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
   }
 }

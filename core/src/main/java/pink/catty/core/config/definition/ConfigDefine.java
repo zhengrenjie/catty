@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config.define;
+package pink.catty.core.config.definition;
 
 import java.util.Objects;
 
@@ -35,19 +35,21 @@ import java.util.Objects;
  */
 public final class ConfigDefine {
 
-  private final Definitions definitions;
+  private static final Object NO_DEFAULT_VALUE = new Object();
+
+  private final Definition definition;
   private String name;
   private String description;
   private Type type;
-  private Object defaultValue;
+  private Object defaultValue = NO_DEFAULT_VALUE;
   private Validator validator;
 
-  private ConfigDefine(Definitions definitions) {
-    this.definitions = definitions;
+  private ConfigDefine(Definition definition) {
+    this.definition = definition;
   }
 
-  public static ConfigDefine define(Definitions definitions) {
-    return new ConfigDefine(definitions);
+  public static ConfigDefine define(Definition definition) {
+    return new ConfigDefine(definition);
   }
 
   public ConfigDefine withName(String name) {
@@ -86,18 +88,18 @@ public final class ConfigDefine {
     /*
      * check if type of default value is correct
      */
-    if (defaultValue != null) {
+    if (defaultValue != NO_DEFAULT_VALUE && defaultValue != null) {
       checkValueType(defaultValue);
     }
 
-    if (definitions.containsName(name)) {
+    if (definition.containsName(name)) {
       throw new NullPointerException("Config named '" + name + "' is already defined.");
     }
-    definitions.addConfigDefine(name, this);
+    definition.addConfigDefine(name, this);
   }
 
-  public Definitions getDefinitions() {
-    return definitions;
+  public Definition getDefinition() {
+    return definition;
   }
 
   public String getName() {
@@ -128,7 +130,11 @@ public final class ConfigDefine {
   }
 
   public void destroy() {
-    definitions.removeDefine(name);
+    definition.removeDefine(name);
+  }
+
+  public boolean hasDefaultValue() {
+    return defaultValue != NO_DEFAULT_VALUE;
   }
 
   private void checkValueType(Object value) {

@@ -21,7 +21,6 @@ import java.util.Map;
 import pink.catty.core.config.ConfigException;
 import pink.catty.core.config.definition.ConsumerDefinition;
 import pink.catty.core.config.definition.Define;
-import pink.catty.core.extension.ExtensionType.ClusterType;
 import pink.catty.core.extension.ExtensionType.EndpointFactoryType;
 import pink.catty.core.extension.ExtensionType.LoadBalanceType;
 import pink.catty.core.extension.ExtensionType.ProtocolType;
@@ -108,7 +107,7 @@ public final class ConsumerConfig {
    * Which serialization to use.
    *
    * @see pink.catty.core.extension.spi.Serialization
-   * @see SerializationType
+   * @see pink.catty.core.extension.ExtensionType.SerializationType
    */
   @Define(ConsumerDefinition.SERIALIZATION)
   private final String serialization;
@@ -117,7 +116,7 @@ public final class ConsumerConfig {
    * Which codec to use.
    *
    * @see pink.catty.core.extension.spi.Codec
-   * @see CodecType
+   * @see pink.catty.core.extension.ExtensionType.CodecType
    */
   @Define(ConsumerDefinition.CODEC)
   private final String codec;
@@ -147,7 +146,7 @@ public final class ConsumerConfig {
 
   /**
    * @see pink.catty.core.extension.spi.Cluster
-   * @see ClusterType
+   * @see pink.catty.core.extension.ExtensionType.ClusterType
    */
   @Define(ConsumerDefinition.HA_STRATEGY)
   private final String cluster;

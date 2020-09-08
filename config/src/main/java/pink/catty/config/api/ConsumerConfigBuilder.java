@@ -14,7 +14,7 @@
  */
 package pink.catty.config.api;
 
-public final class ConsumerConfigBuilder {
+public final class ConsumerConfigBuilder<T> {
 
   private int connectTimeout;
   private int readTimeout;
@@ -34,7 +34,7 @@ public final class ConsumerConfigBuilder {
   private int failbackPeriod;
   private String protocol;
   private String filterList;
-  private Class<?> interfaceClass;
+  private Class<T> interfaceClass;
   private String interfaceName;
   private String interfaceVersion;
   private String interfaceTimeout;
@@ -133,7 +133,7 @@ public final class ConsumerConfigBuilder {
     return this;
   }
 
-  public ConsumerConfigBuilder setInterfaceClass(Class<?> interfaceClass) {
+  public ConsumerConfigBuilder setInterfaceClass(Class<T> interfaceClass) {
     this.interfaceClass = interfaceClass;
     return this;
   }
@@ -158,8 +158,8 @@ public final class ConsumerConfigBuilder {
     return this;
   }
 
-  public ConsumerConfig build() {
-    return new ConsumerConfig(connectTimeout,
+  public ConsumerConfig<T> build() {
+    return new ConsumerConfig<>(connectTimeout,
         readTimeout,
         directAddress,
         ioThreadNum,

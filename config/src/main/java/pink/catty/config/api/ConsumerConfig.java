@@ -22,17 +22,18 @@ import pink.catty.core.extension.ExtensionType.ProtocolType;
 /**
  * Read-Only.
  */
-public final class ConsumerConfig {
+public final class ConsumerConfig<T> {
 
   /**
    * Builder, the only entry to construct ConsumerConfig.
    *
    * @return ConsumerConfigBuilder instance
    */
-  public static ConsumerConfigBuilder builder() {
-    ConsumerConfigBuilder builder = new ConsumerConfigBuilder();
+  public static <T> ConsumerConfigBuilder<T> builder(Class<T> service) {
+    ConsumerConfigBuilder<T> builder = new ConsumerConfigBuilder<>();
     ConfigBuilderHelper
         .PrepareBuilder(builder, ConsumerConfig.class, ConsumerDefinition.GetDefinition());
+    builder.setInterfaceClass(service);
     return builder;
   }
 
@@ -185,7 +186,7 @@ public final class ConsumerConfig {
    * The interface of service.
    */
   @Define(ConsumerDefinition.INTERFACE_CLASS)
-  private final Class<?> interfaceClass;
+  private final Class<T> interfaceClass;
 
   /**
    * Name of the interface, if not set, interface' class name will be used.
@@ -234,7 +235,7 @@ public final class ConsumerConfig {
       int failbackPeriod,
       String protocol,
       String filterList,
-      Class<?> interfaceClass,
+      Class<T> interfaceClass,
       String interfaceName,
       String interfaceVersion,
       String interfaceTimeout,
@@ -336,7 +337,7 @@ public final class ConsumerConfig {
     return filterList;
   }
 
-  public Class<?> getInterfaceClass() {
+  public Class<T> getInterfaceClass() {
     return interfaceClass;
   }
 

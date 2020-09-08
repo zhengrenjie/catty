@@ -14,7 +14,7 @@
  */
 package pink.catty.config.api;
 
-public final class ProviderConfigBuilder {
+public final class ProviderConfigBuilder<T> {
 
   private int port;
   private int ioThreadNum;
@@ -26,7 +26,7 @@ public final class ProviderConfigBuilder {
   private String codec;
   private String protocol;
   private String filterList;
-  private Class<?> interfaceClass;
+  private Class<T> interfaceClass;
   private String interfaceName;
   private String interfaceVersion;
   private String interfaceTimeout;
@@ -35,83 +35,83 @@ public final class ProviderConfigBuilder {
   ProviderConfigBuilder() {
   }
 
-  public ProviderConfigBuilder setPort(int port) {
+  public ProviderConfigBuilder<T> setPort(int port) {
     this.port = port;
     return this;
   }
 
-  public ProviderConfigBuilder setIoThreadNum(int ioThreadNum) {
+  public ProviderConfigBuilder<T> setIoThreadNum(int ioThreadNum) {
     this.ioThreadNum = ioThreadNum;
     return this;
   }
 
-  public ProviderConfigBuilder setUseWorkerThread(boolean useWorkerThread) {
+  public ProviderConfigBuilder<T> setUseWorkerThread(boolean useWorkerThread) {
     this.useWorkerThread = useWorkerThread;
     return this;
   }
 
-  public ProviderConfigBuilder setWorkerMinNum(int workerMinNum) {
+  public ProviderConfigBuilder<T> setWorkerMinNum(int workerMinNum) {
     this.workerMinNum = workerMinNum;
     return this;
   }
 
-  public ProviderConfigBuilder setWorkerMaxNum(int workerMaxNum) {
+  public ProviderConfigBuilder<T> setWorkerMaxNum(int workerMaxNum) {
     this.workerMaxNum = workerMaxNum;
     return this;
   }
 
-  public ProviderConfigBuilder setClientType(String clientType) {
+  public ProviderConfigBuilder<T> setClientType(String clientType) {
     this.clientType = clientType;
     return this;
   }
 
-  public ProviderConfigBuilder setSerialization(String serialization) {
+  public ProviderConfigBuilder<T> setSerialization(String serialization) {
     this.serialization = serialization;
     return this;
   }
 
-  public ProviderConfigBuilder setCodec(String codec) {
+  public ProviderConfigBuilder<T> setCodec(String codec) {
     this.codec = codec;
     return this;
   }
 
-  public ProviderConfigBuilder setProtocol(String protocol) {
+  public ProviderConfigBuilder<T> setProtocol(String protocol) {
     this.protocol = protocol;
     return this;
   }
 
-  public ProviderConfigBuilder setFilterList(String filterList) {
+  public ProviderConfigBuilder<T> setFilterList(String filterList) {
     this.filterList = filterList;
     return this;
   }
 
-  public ProviderConfigBuilder setInterfaceClass(Class<?> interfaceClass) {
+  public ProviderConfigBuilder<T> setInterfaceClass(Class<T> interfaceClass) {
     this.interfaceClass = interfaceClass;
     return this;
   }
 
-  public ProviderConfigBuilder setInterfaceName(String interfaceName) {
+  public ProviderConfigBuilder<T> setInterfaceName(String interfaceName) {
     this.interfaceName = interfaceName;
     return this;
   }
 
-  public ProviderConfigBuilder setInterfaceVersion(String interfaceVersion) {
+  public ProviderConfigBuilder<T> setInterfaceVersion(String interfaceVersion) {
     this.interfaceVersion = interfaceVersion;
     return this;
   }
 
-  public ProviderConfigBuilder setInterfaceTimeout(String interfaceTimeout) {
+  public ProviderConfigBuilder<T> setInterfaceTimeout(String interfaceTimeout) {
     this.interfaceTimeout = interfaceTimeout;
     return this;
   }
 
-  public ProviderConfigBuilder setRegistryAddress(String registryAddress) {
+  public ProviderConfigBuilder<T> setRegistryAddress(String registryAddress) {
     this.registryAddress = registryAddress;
     return this;
   }
 
-  public ProviderConfig build() {
-    return new ProviderConfig(port,
+  public ProviderConfig<T> build() {
+    return new ProviderConfig<>(port,
         ioThreadNum,
         useWorkerThread,
         workerMinNum,

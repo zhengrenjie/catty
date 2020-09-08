@@ -20,17 +20,18 @@ import pink.catty.core.extension.ExtensionType.ProtocolType;
 /**
  * Read-Only.
  */
-public final class ProviderConfig {
+public final class ProviderConfig<T> {
 
   /**
    * Builder, the only entry to construct ProviderConfig.
    *
    * @return ProviderConfigBuilder instance
    */
-  public static ProviderConfigBuilder builder() {
-    ProviderConfigBuilder builder = new ProviderConfigBuilder();
+  public static <T> ProviderConfigBuilder<T> builder(Class<T> service) {
+    ProviderConfigBuilder<T> builder = new ProviderConfigBuilder<>();
     ConfigBuilderHelper
         .PrepareBuilder(builder, ProviderConfig.class, ProviderDefinition.GetDefinition());
+    builder.setInterfaceClass(service);
     return builder;
   }
 
@@ -127,7 +128,7 @@ public final class ProviderConfig {
    * The interface of service.
    */
   @Define(ProviderDefinition.INTERFACE_CLASS)
-  private final Class<?> interfaceClass;
+  private final Class<T> interfaceClass;
 
   /**
    * Name of the interface, if not set, interface' class name will be used.
@@ -168,7 +169,7 @@ public final class ProviderConfig {
       String codec,
       String protocol,
       String filterList,
-      Class<?> interfaceClass,
+      Class<T> interfaceClass,
       String interfaceName,
       String interfaceVersion,
       String interfaceTimeout,
@@ -230,7 +231,7 @@ public final class ProviderConfig {
     return filterList;
   }
 
-  public Class<?> getInterfaceClass() {
+  public Class<T> getInterfaceClass() {
     return interfaceClass;
   }
 

@@ -17,6 +17,7 @@ package pink.catty.config.api;
 import pink.catty.core.ServerAddress;
 import pink.catty.core.utils.NetUtils;
 
+@Deprecated
 public class ServerConfig {
 
   public static ServerConfigBuilder builder() {

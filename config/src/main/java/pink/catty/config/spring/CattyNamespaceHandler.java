@@ -12,14 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.spring;
+package pink.catty.config.spring;
 
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
-import pink.catty.spring.bean.ClientConfigBean;
-import pink.catty.spring.bean.ExporterBean;
-import pink.catty.spring.bean.ProtocolConfigBean;
-import pink.catty.spring.bean.ReferenceFactoryBean;
-import pink.catty.spring.bean.ServerConfigBean;
+import pink.catty.config.spring.bean.ClientConfigBean;
+import pink.catty.config.spring.bean.ExporterBean;
+import pink.catty.config.spring.bean.ProtocolConfigBean;
+import pink.catty.config.spring.bean.ReferenceFactoryBean;
+import pink.catty.config.spring.bean.ServerConfigBean;
 
 public class CattyNamespaceHandler extends NamespaceHandlerSupport {
 

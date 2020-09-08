@@ -28,6 +28,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>5.0.8.RELEASE</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>pink.catty</groupId>
       <artifactId>catty-invokers</artifactId>
       <version>0.2.6</version>

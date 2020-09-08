@@ -20,6 +20,7 @@ import pink.catty.core.extension.ExtensionType.EndpointFactoryType;
 import pink.catty.core.extension.ExtensionType.LoadBalanceType;
 import pink.catty.core.extension.ExtensionType.SerializationType;
 
+@Deprecated
 public class ProtocolConfig {
 
   private String serializationType = SerializationType.HESSIAN2;

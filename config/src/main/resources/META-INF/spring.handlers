@@ -13,4 +13,4 @@
 # limitations under the License.
 #
 
-http\://catty.pink/schema/catty=pink.catty.spring.CattyNamespaceHandler
+http\://catty.pink/schema/catty=pink.catty.config.spring.CattyNamespaceHandler

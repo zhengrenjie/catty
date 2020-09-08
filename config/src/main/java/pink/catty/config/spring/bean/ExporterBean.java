@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.spring.bean;
+package pink.catty.config.spring.bean;
 
 import java.util.List;
 import org.springframework.beans.factory.DisposableBean;

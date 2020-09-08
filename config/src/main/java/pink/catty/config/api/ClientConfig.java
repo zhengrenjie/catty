@@ -19,6 +19,7 @@ import java.util.List;
 import pink.catty.core.CattyException;
 import pink.catty.core.ServerAddress;
 
+@Deprecated
 public class ClientConfig {
 
   public static ClientConfigBuilder builder() {

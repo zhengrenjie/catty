@@ -47,11 +47,6 @@
       <artifactId>catty-extension</artifactId>
       <version>0.2.6</version>
     </dependency>
-    <dependency>
-      <groupId>pink.catty</groupId>
-      <artifactId>catty-spring</artifactId>
-      <version>0.2.6</version>
-    </dependency>
   </dependencies>
 
 </project>

@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.spring;
+package pink.catty.config.spring;
 
 import java.util.Arrays;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -25,12 +25,12 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import pink.catty.spring.bean.ClientConfigBean;
-import pink.catty.spring.bean.ExporterBean;
-import pink.catty.spring.bean.ProtocolConfigBean;
-import pink.catty.spring.bean.ReferenceFactoryBean;
-import pink.catty.spring.bean.ServerConfigBean;
-import pink.catty.spring.bean.ServiceBean;
+import pink.catty.config.spring.bean.ClientConfigBean;
+import pink.catty.config.spring.bean.ExporterBean;
+import pink.catty.config.spring.bean.ProtocolConfigBean;
+import pink.catty.config.spring.bean.ReferenceFactoryBean;
+import pink.catty.config.spring.bean.ServerConfigBean;
+import pink.catty.config.spring.bean.ServiceBean;
 
 public class CattyBeanDefinitionParser implements BeanDefinitionParser {
 

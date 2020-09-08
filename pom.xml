@@ -130,7 +130,6 @@
     <module>all</module>
     <module>config</module>
     <module>extension</module>
-    <module>spring</module>
   </modules>
 
 </project>

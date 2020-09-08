@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.spring.bean;
+package pink.catty.config.spring.bean;
 
-import pink.catty.config.api.ClientConfig;
+import pink.catty.config.api.ProtocolConfig;
 
-public class ClientConfigBean extends ClientConfig {
+public class ProtocolConfigBean<T> extends ProtocolConfig {
 
 }

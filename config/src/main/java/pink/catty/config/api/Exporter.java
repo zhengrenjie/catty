@@ -17,7 +17,7 @@ package pink.catty.config.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pink.catty.core.Constants;
-import pink.catty.core.ServerAddress;
+import pink.catty.core.Node;
 import pink.catty.core.config.RegistryConfig;
 import pink.catty.core.extension.ExtensionFactory;
 import pink.catty.core.extension.ExtensionType.ProtocolType;
@@ -76,7 +76,7 @@ public class Exporter {
   }
 
   public <T> Exporter registerService(Class<T> interfaceClass, T serviceObject) {
-    ServerAddress address = serverConfig.getServerAddress();
+    Node address = serverConfig.getServerAddress();
 
     ServiceModel serviceModel = ServiceModel.Parse(interfaceClass);
     serviceModel.setTarget(serviceObject);
@@ -103,7 +103,7 @@ public class Exporter {
           .getExtension(registryConfig.getRegistryType());
       registry.open();
     }
-    ServerAddress address = serverConfig.getServerAddress();
+    Node address = serverConfig.getServerAddress();
     ServerMeta serverMeta = new ServerMeta();
     serverMeta.setLocalIp(address.getIp());
     serverMeta.setLocalPort(address.getPort());

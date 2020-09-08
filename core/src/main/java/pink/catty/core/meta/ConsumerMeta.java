@@ -15,7 +15,7 @@
 package pink.catty.core.meta;
 
 import java.util.List;
-import pink.catty.core.ServerAddress;
+import pink.catty.core.Node;
 
 public class ConsumerMeta extends ClientMeta {
 
@@ -25,7 +25,7 @@ public class ConsumerMeta extends ClientMeta {
   private String group;
   private String serviceName;
   private int healthCheckPeriod = DEFAULT_HEALTH_CHECK_PERIOD;
-  private List<ServerAddress> directAddress;
+  private List<Node> directAddress;
   private List<String> filterNames;
 
   /*
@@ -113,11 +113,11 @@ public class ConsumerMeta extends ClientMeta {
     this.recoveryPeriod = recoveryPeriod;
   }
 
-  public List<ServerAddress> getDirectAddress() {
+  public List<Node> getDirectAddress() {
     return directAddress;
   }
 
-  public void setDirectAddress(List<ServerAddress> directAddress) {
+  public void setDirectAddress(List<Node> directAddress) {
     this.directAddress = directAddress;
   }
 

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pink.catty.core.ServerAddress;
+import pink.catty.core.Node;
 import pink.catty.core.extension.ExtensionFactory;
 import pink.catty.core.invoker.endpoint.Client;
 import pink.catty.core.invoker.endpoint.Server;
@@ -29,12 +29,12 @@ public abstract class AbstractEndpointFactory implements EndpointFactory {
 
   protected Logger logger = LoggerFactory.getLogger(getClass());
 
-  private static final Map<ServerAddress, Client> clientCache = new ConcurrentHashMap<>();
+  private static final Map<Node, Client> clientCache = new ConcurrentHashMap<>();
   private static final Map<Integer, Server> serverCache = new ConcurrentHashMap<>();
 
   @Override
   public Client getClient(ClientMeta clientMeta) {
-    ServerAddress address = new ServerAddress(clientMeta.getRemoteIp(), clientMeta.getRemotePort());
+    Node address = new Node(clientMeta.getRemoteIp(), clientMeta.getRemotePort());
     Client client = clientCache.get(address);
     if(client != null && client.isClosed()) {
       clientCache.remove(address);

@@ -17,8 +17,11 @@ package pink.catty.config.api;
 import java.util.ArrayList;
 import java.util.List;
 import pink.catty.core.CattyException;
-import pink.catty.core.ServerAddress;
+import pink.catty.core.Node;
 
+/**
+ * @deprecated by 0.2.6
+ */
 @Deprecated
 public class ClientConfig {
 
@@ -26,7 +29,7 @@ public class ClientConfig {
     return new ClientConfigBuilder();
   }
 
-  private List<ServerAddress> addresses;
+  private List<Node> addresses;
 
   // todo: divided connect timeout and read timeout.
   private int timeout;
@@ -34,19 +37,19 @@ public class ClientConfig {
   public ClientConfig() {
   }
 
-  public ClientConfig(List<ServerAddress> addresses, int timeout) {
+  public ClientConfig(List<Node> addresses, int timeout) {
     this.addresses = addresses;
     this.timeout = timeout;
   }
 
-  public ServerAddress getFirstAddress() {
+  public Node getFirstAddress() {
     if(addresses == null || addresses.size() <= 0) {
       throw new CattyException("No available address");
     }
     return addresses.get(0);
   }
 
-  public List<ServerAddress> getAddresses() {
+  public List<Node> getAddresses() {
     if(addresses == null || addresses.size() <= 0) {
       throw new CattyException("No available address");
     }
@@ -57,7 +60,7 @@ public class ClientConfig {
     return timeout;
   }
 
-  public void setAddresses(List<ServerAddress> addresses) {
+  public void setAddresses(List<Node> addresses) {
     this.addresses = addresses;
   }
 
@@ -69,14 +72,14 @@ public class ClientConfig {
    * Builder
    */
   public static class ClientConfigBuilder {
-    private List<ServerAddress> addresses;
+    private List<Node> addresses;
     private int timeout;
 
     public ClientConfigBuilder addAddress(String address) {
       if(addresses == null) {
         addresses = new ArrayList<>();
       }
-      addresses.add(new ServerAddress(address));
+      addresses.add(new Node(address));
       return this;
     }
 

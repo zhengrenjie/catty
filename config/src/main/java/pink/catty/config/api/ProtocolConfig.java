@@ -20,6 +20,9 @@ import pink.catty.core.extension.ExtensionType.EndpointFactoryType;
 import pink.catty.core.extension.ExtensionType.LoadBalanceType;
 import pink.catty.core.extension.ExtensionType.SerializationType;
 
+/**
+ * @deprecated by 0.2.6
+ */
 @Deprecated
 public class ProtocolConfig {
 

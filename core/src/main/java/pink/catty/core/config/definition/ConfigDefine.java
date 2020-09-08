@@ -35,7 +35,7 @@ import java.util.Objects;
  */
 public final class ConfigDefine {
 
-  private static final Object NO_DEFAULT_VALUE = new Object();
+  static final Object NO_DEFAULT_VALUE = new Object();
 
   private final Definition definition;
   private String name;

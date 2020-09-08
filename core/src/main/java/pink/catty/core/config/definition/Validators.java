@@ -49,5 +49,14 @@ public enum Validators implements Validator {
     }
   },
 
+  NOT_NULL {
+    @Override
+    public void check(ConfigDefine definition, Object value) {
+      if ((value == null)) {
+        throw new ValidException(definition.getName() + " must not be null.");
+      }
+    }
+  }
+
   ;
 }

@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import pink.catty.core.config.ConfigException;
-import pink.catty.core.config.definition.Define;
 import pink.catty.core.config.definition.Definition;
 
 public final class ConfigBuilderHelper {

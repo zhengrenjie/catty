@@ -21,7 +21,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import pink.catty.config.api.ClientConfig;
 import pink.catty.config.api.ProtocolConfig;
 import pink.catty.config.api.ServerConfig;
-import pink.catty.core.ServerAddress;
+import pink.catty.core.Node;
 
 public class XsdTest {
 
@@ -44,10 +44,10 @@ public class XsdTest {
     ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("xsd_test.xml");
     ClientConfig clientConfig = context.getBean(ClientConfig.class);
     Assert.assertEquals(clientConfig.getTimeout(), 3000);
-    List<ServerAddress> addressList = clientConfig.getAddresses();
+    List<Node> addressList = clientConfig.getAddresses();
     Assert.assertEquals(addressList.size(), 2);
-    Assert.assertEquals(addressList.get(0), new ServerAddress("127.0.0.1", 8080));
-    Assert.assertEquals(addressList.get(1), new ServerAddress("127.0.0.1", 8081));
+    Assert.assertEquals(addressList.get(0), new Node("127.0.0.1", 8080));
+    Assert.assertEquals(addressList.get(1), new Node("127.0.0.1", 8081));
   }
 
   @Test

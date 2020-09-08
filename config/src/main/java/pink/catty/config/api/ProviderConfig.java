@@ -15,7 +15,6 @@
 package pink.catty.config.api;
 
 import pink.catty.core.config.definition.ProviderDefinition;
-import pink.catty.core.config.definition.Define;
 import pink.catty.core.extension.ExtensionType.ProtocolType;
 
 /**

@@ -16,13 +16,13 @@ package pink.catty.core;
 
 import java.util.Objects;
 
-public class ServerAddress {
+public class Node {
 
   private String ip;
   private int port;
   private String address;
 
-  public ServerAddress(String address) {
+  public Node(String address) {
     this.address = address;
     if (address.contains("://")) {
       address = address.substring(address.indexOf("://") + "://".length());
@@ -40,7 +40,7 @@ public class ServerAddress {
     }
   }
 
-  public ServerAddress(String ip, int port) {
+  public Node(String ip, int port) {
     this.ip = ip;
     this.port = port;
     this.address = ip + ":" + port;
@@ -73,10 +73,10 @@ public class ServerAddress {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof ServerAddress)) {
+    if (!(obj instanceof Node)) {
       return false;
     }
-    ServerAddress other = (ServerAddress) obj;
+    Node other = (Node) obj;
     if (!Objects.equals(ip, other.ip)) {
       return false;
     }

@@ -14,7 +14,7 @@
  */
 package pink.catty.extension.protocol;
 
-import pink.catty.core.ServerAddress;
+import pink.catty.core.Node;
 import pink.catty.core.extension.Extension;
 import pink.catty.core.extension.ExtensionFactory;
 import pink.catty.core.extension.ExtensionType.ProtocolType;
@@ -56,7 +56,7 @@ public class CattyProtocol implements Protocol {
       ConsumerMeta newMetaInfo = MetaInfo.parseOf(metaString, ConsumerMeta.class);
 
       // set address
-      ServerAddress address = meta.getDirectAddress().get(0);
+      Node address = meta.getDirectAddress().get(0);
       newMetaInfo.setRemoteIp(address.getIp());
       newMetaInfo.setRemotePort(address.getPort());
 
@@ -79,7 +79,7 @@ public class CattyProtocol implements Protocol {
     // 4.Check if direct address set. Build Cluster.
     if (meta.getDirectAddress() != null && meta.getDirectAddress().size() > 0) {
       String metaString = meta.toString();
-      for (ServerAddress address : meta.getDirectAddress()) {
+      for (Node address : meta.getDirectAddress()) {
         Consumer toRegister;
         ConsumerMeta newMetaInfo = MetaInfo.parseOf(metaString, ConsumerMeta.class);
         newMetaInfo.setRemoteIp(address.getIp());

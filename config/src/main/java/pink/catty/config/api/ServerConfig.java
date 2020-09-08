@@ -14,9 +14,12 @@
  */
 package pink.catty.config.api;
 
-import pink.catty.core.ServerAddress;
+import pink.catty.core.Node;
 import pink.catty.core.utils.NetUtils;
 
+/**
+ * @deprecated by 0.2.6
+ */
 @Deprecated
 public class ServerConfig {
 
@@ -28,7 +31,7 @@ public class ServerConfig {
   private int workerThreadNum;
   private int minWorkerThreadNum;
   private int maxWorkerThreadNum;
-  private volatile ServerAddress address;
+  private volatile Node address;
 
   /**
    * If every request from the same TCP should be executed by order, set this option true.
@@ -93,12 +96,12 @@ public class ServerConfig {
     this.maxWorkerThreadNum = maxWorkerThreadNum;
   }
 
-  public ServerAddress getServerAddress() {
+  public Node getServerAddress() {
     if (address == null) {
       synchronized (this) {
         if (address == null) {
           String serverIp = NetUtils.getLocalAddress().getHostAddress();
-          this.address = new ServerAddress(serverIp, port);
+          this.address = new Node(serverIp, port);
         }
       }
     }

@@ -214,7 +214,8 @@ public class ConsumerDefinition {
     ConfigDefine.define(DEFINITION)
         .withName(DIRECT_ADDRESSES)
         .withType(Type.OBJECT)
-        .withDefaultValue(Validators.MUST_LIST)
+        .withDefaultValue(null)
+        .withValidator(Validators.MUST_LIST)
         .done();
 
     // IO_THREAD_NUMBER
@@ -322,26 +323,29 @@ public class ConsumerDefinition {
     ConfigDefine.define(DEFINITION)
         .withName(FILTER_LIST)
         .withType(Type.OBJECT)
-        .withDefaultValue(Validators.MUST_LIST)
+        .withDefaultValue(null)
+        .withValidator(Validators.MUST_LIST)
         .done();
 
     // INTERFACE_CLASS
     ConfigDefine.define(DEFINITION)
         .withName(INTERFACE_CLASS)
         .withType(Type.OBJECT)
-        .withValidator(Validators.MUST_CLASS)
+        .withValidator(Validators.MUST_CLASS, Validators.NOT_NULL)
         .done();
 
     // INTERFACE_NAME
     ConfigDefine.define(DEFINITION)
         .withName(INTERFACE_NAME)
         .withType(Type.STRING)
+        .withDefaultValue(null)
         .done();
 
     // INTERFACE_VERSION
     ConfigDefine.define(DEFINITION)
         .withName(INTERFACE_VERSION)
         .withType(Type.STRING)
+        .withDefaultValue(null)
         .done();
 
     // INTERFACE_TIMEOUT
@@ -355,6 +359,7 @@ public class ConsumerDefinition {
     ConfigDefine.define(DEFINITION)
         .withName(REGISTRY_ADDRESS)
         .withType(Type.STRING)
+        .withDefaultValue(null)
         .done();
   }
 

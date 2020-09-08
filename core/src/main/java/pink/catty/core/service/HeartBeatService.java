@@ -15,6 +15,8 @@
 package pink.catty.core.service;
 
 import pink.catty.core.Constants;
+import pink.catty.core.model.RpcMethod;
+import pink.catty.core.model.RpcService;
 
 @RpcService(name = Constants.HEARTBEAT_SERVICE_NAME)
 public interface HeartBeatService {

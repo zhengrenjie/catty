@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Catty Project
+ * Copyright 2019 The Catty Project
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,26 +12,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.core.service;
+package pink.catty.core.model;
 
-public class NotSupportedMethodException extends RuntimeException {
+public class ServiceNotFoundException extends RuntimeException {
 
-  public NotSupportedMethodException() {
+  public ServiceNotFoundException() {
   }
 
-  public NotSupportedMethodException(String message) {
+  public ServiceNotFoundException(String message) {
     super(message);
   }
 
-  public NotSupportedMethodException(String message, Throwable cause) {
+  public ServiceNotFoundException(String message, Throwable cause) {
     super(message, cause);
   }
 
-  public NotSupportedMethodException(Throwable cause) {
+  public ServiceNotFoundException(Throwable cause) {
     super(cause);
   }
 
-  public NotSupportedMethodException(String message, Throwable cause, boolean enableSuppression,
+  public ServiceNotFoundException(String message, Throwable cause, boolean enableSuppression,
       boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }

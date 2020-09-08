@@ -15,14 +15,12 @@
 package pink.catty.core.meta;
 
 import java.util.List;
-import pink.catty.core.service.ServiceModel;
 
 public class ProviderMeta extends ServerMeta {
 
   private String version;
   private String group;
   private String serviceName;
-  private transient ServiceModel serviceModel;
   private List<String> filterNames;
 
   public ProviderMeta() {
@@ -55,14 +53,6 @@ public class ProviderMeta extends ServerMeta {
 
   public void setServiceName(String serviceName) {
     this.serviceName = serviceName;
-  }
-
-  public ServiceModel getServiceModel() {
-    return serviceModel;
-  }
-
-  public void setServiceModel(ServiceModel serviceModel) {
-    this.serviceModel = serviceModel;
   }
 
   public List<String> getFilterNames() {

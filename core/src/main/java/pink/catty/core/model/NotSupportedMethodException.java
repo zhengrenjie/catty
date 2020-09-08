@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 The Catty Project
+ * Copyright 2020 The Catty Project
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,26 +12,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.core.service;
+package pink.catty.core.model;
 
-public class DuplicatedMethodNameException extends RuntimeException {
+public class NotSupportedMethodException extends RuntimeException {
 
-  public DuplicatedMethodNameException() {
+  public NotSupportedMethodException() {
   }
 
-  public DuplicatedMethodNameException(String message) {
+  public NotSupportedMethodException(String message) {
     super(message);
   }
 
-  public DuplicatedMethodNameException(String message, Throwable cause) {
+  public NotSupportedMethodException(String message, Throwable cause) {
     super(message, cause);
   }
 
-  public DuplicatedMethodNameException(Throwable cause) {
+  public NotSupportedMethodException(Throwable cause) {
     super(cause);
   }
 
-  public DuplicatedMethodNameException(String message, Throwable cause, boolean enableSuppression,
+  public NotSupportedMethodException(String message, Throwable cause, boolean enableSuppression,
       boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }

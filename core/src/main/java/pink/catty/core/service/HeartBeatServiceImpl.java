@@ -24,7 +24,7 @@ public class HeartBeatServiceImpl implements HeartBeatService {
 
   @Override
   public String heartBeat(String uuid) {
-    logger.info("Get heart beat: " + uuid + " time: " + (System.currentTimeMillis() - BEGIN_TIME));
+    logger.debug("Get heart beat: " + uuid + " time: " + (System.currentTimeMillis() - BEGIN_TIME));
     return uuid;
   }
 }

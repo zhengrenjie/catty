@@ -23,7 +23,7 @@ import pink.catty.core.extension.spi.Protocol;
 import pink.catty.core.extension.spi.Registry;
 import pink.catty.core.invoker.Consumer;
 import pink.catty.core.meta.ConsumerMeta;
-import pink.catty.core.service.ServiceModel;
+import pink.catty.core.model.ServiceModel;
 import pink.catty.invokers.consumer.ConsumerHandler;
 
 /**
@@ -94,10 +94,9 @@ public class Reference<T> {
     if (ref == null) {
       synchronized (this) {
         if (ref == null) {
-          ServiceModel serviceModel = ServiceModel.parse(interfaceClass);
+          ServiceModel<T> serviceModel = ServiceModel.Parse(interfaceClass);
 
           ConsumerMeta consumerMeta = new ConsumerMeta();
-          consumerMeta.setServiceModel(serviceModel);
           consumerMeta.setSerialization(protocolConfig.getSerializationType());
           consumerMeta.setCodec(protocolConfig.getCodecType());
           consumerMeta.setEndpoint(protocolConfig.getEndpointType());
@@ -108,10 +107,11 @@ public class Reference<T> {
           consumerMeta.setRecoveryPeriod(protocolConfig.getRecoveryPeriod());
           consumerMeta.setDirectAddress(clientConfig.getAddresses());
           consumerMeta.setTimeout(clientConfig.getTimeout());
+          consumerMeta.setServiceName(serviceModel.getServiceName());
 
           Protocol protocol = ExtensionFactory.protocol().getExtension(ProtocolType.CATTY);
           Consumer consumer = protocol.buildConsumer(consumerMeta);
-          ref = ConsumerHandler.getProxy(consumer);
+          ref = ConsumerHandler.getProxy(consumer, serviceModel);
         }
       }
     }

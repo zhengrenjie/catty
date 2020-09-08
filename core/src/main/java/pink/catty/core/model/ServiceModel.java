@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.core.service;
+package pink.catty.core.model;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -20,24 +20,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import pink.catty.core.utils.ReflectUtils;
 
 /**
  * RpcService provider info.
- *
+ * <p>
  * Cache service's interface info to mark an easy entry.
  */
 public class ServiceModel<T> {
 
-  private Class<T> interfaceClass;
+  private static final Map<String, ServiceModel<?>> SERVICE_MODEL_MAP = new ConcurrentHashMap<>();
+
+  private final Class<T> interfaceClass;
+
+  private final Map<String, Method> methodMap;
+
+  private final Set<Method> validMethod;
+
+  private final Map<Method, MethodModel> methodMetaMap;
 
   private Object target;
-
-  private Map<String, Method> methodMap;
-
-  private Set<Method> validMethod;
-
-  private Map<Method, MethodModel> methodMetaMap;
 
   private String version = "";
 
@@ -47,8 +50,26 @@ public class ServiceModel<T> {
 
   private int timeout = -1;
 
-  public static <T> ServiceModel<T> parse(Class<T> interfaceClass) {
-    return new ServiceModel<>(interfaceClass);
+  @SuppressWarnings("unchecked")
+  public static <T> ServiceModel<T> Of(String serviceName) {
+    ServiceModel<T> serviceModel = (ServiceModel<T>) SERVICE_MODEL_MAP.get(serviceName);
+    if (serviceModel == null) {
+      try {
+        Class<?> interfaceClass = Class.forName(serviceName);
+        serviceModel = Parse((Class<T>) interfaceClass);
+      } catch (ClassNotFoundException e) {
+        throw new NotSupportedMethodException(
+            "Interface of service not found, name: " + serviceName);
+      }
+    }
+    return serviceModel;
+  }
+
+  public static <T> ServiceModel<T> Parse(Class<T> interfaceClass) {
+    ServiceModel<T> serviceModel = new ServiceModel<>(interfaceClass);
+    String serviceName = serviceModel.getServiceName();
+    SERVICE_MODEL_MAP.putIfAbsent(serviceName, serviceModel);
+    return serviceModel;
   }
 
   private ServiceModel(Class<T> interfaceClass) {

@@ -15,13 +15,13 @@
 package pink.catty.test;
 
 import org.junit.Test;
-import pink.catty.core.service.ServiceModel;
+import pink.catty.core.model.ServiceModel;
 
 public class ServiceModelTest {
 
   @Test
   public void testValidService() {
-    ServiceModel.parse(MockService0.class);
+    ServiceModel.Parse(MockService0.class);
   }
 
   public interface MockService0 {

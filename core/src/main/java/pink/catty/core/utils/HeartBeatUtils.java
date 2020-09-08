@@ -19,8 +19,8 @@ import pink.catty.core.Constants;
 import pink.catty.core.invoker.frame.DefaultRequest;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.service.HeartBeatService;
-import pink.catty.core.service.MethodModel;
-import pink.catty.core.service.ServiceModel;
+import pink.catty.core.model.MethodModel;
+import pink.catty.core.model.ServiceModel;
 
 public abstract class HeartBeatUtils {
 
@@ -28,7 +28,7 @@ public abstract class HeartBeatUtils {
   private static final MethodModel METHOD_MODEL;
 
   static {
-    HEART_BEAT_SERVICE_MODEL = ServiceModel.parse(HeartBeatService.class);
+    HEART_BEAT_SERVICE_MODEL = ServiceModel.Parse(HeartBeatService.class);
     METHOD_MODEL = HEART_BEAT_SERVICE_MODEL.getMethodMetaByName(Constants.HEARTBEAT_METHOD_NAME);
   }
 

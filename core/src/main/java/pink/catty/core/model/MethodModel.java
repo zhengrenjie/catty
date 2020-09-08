@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.core.service;
+package pink.catty.core.model;
 
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;

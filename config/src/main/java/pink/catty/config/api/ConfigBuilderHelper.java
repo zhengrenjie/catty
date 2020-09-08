@@ -22,9 +22,9 @@ import pink.catty.core.config.ConfigException;
 import pink.catty.core.config.definition.Define;
 import pink.catty.core.config.definition.Definition;
 
-public class ConfigBuilderHelper {
+public final class ConfigBuilderHelper {
 
-  static void prepareBuilder(Object builder, Class<?> configClz, Definition definition) {
+  static void PrepareBuilder(Object builder, Class<?> configClz, Definition definition) {
     Class<?> builderClz = builder.getClass();
 
     /*

@@ -34,7 +34,7 @@ import pink.catty.core.invoker.frame.DefaultResponse;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
 import pink.catty.core.meta.ClientMeta;
-import pink.catty.core.service.MethodModel;
+import pink.catty.core.model.MethodModel;
 
 public class NettyClient extends AbstractClient {
 

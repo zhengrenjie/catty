@@ -50,6 +50,11 @@ public class ServerChannelHandler extends ChannelDuplexHandler {
         ((HashableExecutor) nettyServer.getExecutor())
             .submit(hashCode(), () -> processRequest(ctx, (Request) object));
       } else {
+
+        /*
+         * NOTICE: getExecutor().submit() might sallow exceptions. So processRequest() method must
+         * deal exceptions itself.
+         */
         nettyServer.getExecutor().submit(() -> processRequest(ctx, (Request) object));
       }
     } else {
@@ -63,7 +68,14 @@ public class ServerChannelHandler extends ChannelDuplexHandler {
   }
 
   private void processRequest(ChannelHandlerContext ctx, Request request) {
-    Response response = nettyServer.invoke(request);
+    Response response;
+    try {
+      response = nettyServer.invoke(request);
+    } catch (Exception e) {
+      logger.error("error", e);
+      return;
+    }
+
     response.whenComplete((value, throwable) -> {
       if (value == null || value instanceof Void) {
         return;

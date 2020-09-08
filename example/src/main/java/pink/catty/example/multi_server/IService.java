@@ -14,7 +14,7 @@
  */
 package pink.catty.example.multi_server;
 
-import pink.catty.core.service.RpcService;
+import pink.catty.core.model.RpcService;
 
 @RpcService(timeout = 1000)
 public interface IService {

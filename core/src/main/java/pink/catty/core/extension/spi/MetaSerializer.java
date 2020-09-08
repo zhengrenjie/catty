@@ -6,7 +6,7 @@ import pink.catty.core.meta.MetaInfo;
  * Extension to define how serialize MetaInfo to a string. MetaInfo will final register to Registry,
  * so the serialization of MetaInfo needs to be a customizable process.
  * <p>
- * Of cause there are a few off the shelf options for users to choose, like PATH-style serialization
+ * of cause there are a few off the shelf options for users to choose, like PATH-style serialization
  * and json serialization(default).
  */
 @SPI(scope = Scope.SINGLETON)

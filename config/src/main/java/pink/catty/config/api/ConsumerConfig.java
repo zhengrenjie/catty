@@ -33,7 +33,7 @@ public final class ConsumerConfig {
   public static ConsumerConfigBuilder builder() {
     ConsumerConfigBuilder builder = new ConsumerConfigBuilder();
     ConfigBuilderHelper
-        .prepareBuilder(builder, ConsumerConfig.class, ConsumerDefinition.getDefinition());
+        .PrepareBuilder(builder, ConsumerConfig.class, ConsumerDefinition.GetDefinition());
     return builder;
   }
 

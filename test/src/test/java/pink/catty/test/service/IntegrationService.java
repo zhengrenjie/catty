@@ -15,8 +15,8 @@
 package pink.catty.test.service;
 
 import java.util.concurrent.CompletableFuture;
-import pink.catty.core.service.RpcMethod;
-import pink.catty.core.service.RpcService;
+import pink.catty.core.model.RpcMethod;
+import pink.catty.core.model.RpcService;
 import pink.catty.test.service.exception.Test1CheckedException;
 import pink.catty.test.service.exception.Test2CheckedException;
 

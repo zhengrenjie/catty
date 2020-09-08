@@ -21,7 +21,7 @@ import pink.catty.core.extension.ExtensionType.ProtocolType;
 /**
  * Read-Only.
  */
-public class ProviderConfig {
+public final class ProviderConfig {
 
   /**
    * Builder, the only entry to construct ProviderConfig.
@@ -31,7 +31,7 @@ public class ProviderConfig {
   public static ProviderConfigBuilder builder() {
     ProviderConfigBuilder builder = new ProviderConfigBuilder();
     ConfigBuilderHelper
-        .prepareBuilder(builder, ProviderConfig.class, ProviderDefinition.getDefinition());
+        .PrepareBuilder(builder, ProviderConfig.class, ProviderDefinition.GetDefinition());
     return builder;
   }
 

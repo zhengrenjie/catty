@@ -16,13 +16,10 @@ package pink.catty.core.meta;
 
 import java.util.List;
 import pink.catty.core.ServerAddress;
-import pink.catty.core.service.ServiceModel;
 
 public class ConsumerMeta extends ClientMeta {
 
   private static final int DEFAULT_HEALTH_CHECK_PERIOD = 10 * 1000;
-
-  private transient ServiceModel serviceModel;
 
   private String version;
   private String group;
@@ -84,10 +81,6 @@ public class ConsumerMeta extends ClientMeta {
     this.healthCheckPeriod = healthCheckPeriod;
   }
 
-  public ServiceModel getServiceModel() {
-    return serviceModel;
-  }
-
   public String getCluster() {
     return cluster;
   }
@@ -118,13 +111,6 @@ public class ConsumerMeta extends ClientMeta {
 
   public void setRecoveryPeriod(int recoveryPeriod) {
     this.recoveryPeriod = recoveryPeriod;
-  }
-
-  public void setServiceModel(ServiceModel serviceModel) {
-    this.serviceModel = serviceModel;
-    this.version = serviceModel.getVersion();
-    this.group = serviceModel.getGroup();
-    this.serviceName = serviceModel.getServiceName();
   }
 
   public List<ServerAddress> getDirectAddress() {

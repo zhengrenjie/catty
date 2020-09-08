@@ -21,11 +21,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pink.catty.core.utils.ReflectUtils;
 
 public abstract class EventBus {
 
@@ -102,6 +104,27 @@ public abstract class EventBus {
       } catch (Throwable e) {
         logger.error("Error occurred when event " + eventType + " is posted, listener: " + method);
       }
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects
+          .hash(eventType.getName().hashCode(), target, ReflectUtils.getMethodSign(method));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      Subscriber that = (Subscriber) o;
+      return Objects.equals(eventType.getName(), that.eventType.getName()) &&
+          Objects.equals(target, that.target) &&
+          Objects
+              .equals(ReflectUtils.getMethodSign(method), ReflectUtils.getMethodSign(that.method));
     }
   }
 }

@@ -15,7 +15,7 @@
 package pink.catty.test.service;
 
 import org.springframework.stereotype.Component;
-import pink.catty.core.service.RpcService;
+import pink.catty.core.model.RpcService;
 
 @RpcService(timeout = 200)
 @Component("BService")

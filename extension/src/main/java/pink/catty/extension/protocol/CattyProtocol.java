@@ -33,7 +33,6 @@ import pink.catty.core.invoker.frame.Response;
 import pink.catty.core.meta.ConsumerMeta;
 import pink.catty.core.meta.MetaInfo;
 import pink.catty.core.meta.ProviderMeta;
-import pink.catty.core.service.ServiceModel;
 import pink.catty.invokers.consumer.ConsumerClient;
 import pink.catty.invokers.consumer.ConsumerCluster;
 import pink.catty.invokers.consumer.ConsumerHealthCheck;
@@ -47,8 +46,6 @@ public class CattyProtocol implements Protocol {
   @Override
   public Consumer buildConsumer(ConsumerMeta meta) {
 
-    ServiceModel serviceModel = meta.getServiceModel();
-
     /*
      * If only one remote address is specified, CattyProtocol will not create cluster.
      */
@@ -56,7 +53,7 @@ public class CattyProtocol implements Protocol {
 
       // copy meta
       String metaString = meta.toString();
-      ConsumerMeta newMetaInfo = MetaInfo.parseOf(metaString, ConsumerMeta.class, serviceModel);
+      ConsumerMeta newMetaInfo = MetaInfo.parseOf(metaString, ConsumerMeta.class);
 
       // set address
       ServerAddress address = meta.getDirectAddress().get(0);
@@ -84,7 +81,7 @@ public class CattyProtocol implements Protocol {
       String metaString = meta.toString();
       for (ServerAddress address : meta.getDirectAddress()) {
         Consumer toRegister;
-        ConsumerMeta newMetaInfo = MetaInfo.parseOf(metaString, ConsumerMeta.class, serviceModel);
+        ConsumerMeta newMetaInfo = MetaInfo.parseOf(metaString, ConsumerMeta.class);
         newMetaInfo.setRemoteIp(address.getIp());
         newMetaInfo.setRemotePort(address.getPort());
 

@@ -20,10 +20,10 @@ import java.util.concurrent.CompletionStage;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import pink.catty.core.service.MethodModel;
-import pink.catty.core.service.NotSupportedMethodException;
-import pink.catty.core.service.RpcMethod;
-import pink.catty.core.service.ServiceModel;
+import pink.catty.core.model.MethodModel;
+import pink.catty.core.model.NotSupportedMethodException;
+import pink.catty.core.model.RpcMethod;
+import pink.catty.core.model.ServiceModel;
 import pink.catty.test.MethodModelTest.MockMethod.MockObject;
 
 public class MethodModelTest {
@@ -32,7 +32,7 @@ public class MethodModelTest {
 
   @BeforeClass
   public static void init() {
-    serviceModel = ServiceModel.parse(MockMethod.class);
+    serviceModel = ServiceModel.Parse(MockMethod.class);
   }
 
   @Test
@@ -93,12 +93,12 @@ public class MethodModelTest {
 
   @Test(expected = NotSupportedMethodException.class)
   public void invalidMethod0Test() {
-    ServiceModel.parse(InvalidMethod0.class);
+    ServiceModel.Parse(InvalidMethod0.class);
   }
 
   @Test(expected = NotSupportedMethodException.class)
   public void invalidMethod1Test() {
-    ServiceModel.parse(InvalidMethod1.class);
+    ServiceModel.Parse(InvalidMethod1.class);
   }
 
   public interface MockMethod<T> {

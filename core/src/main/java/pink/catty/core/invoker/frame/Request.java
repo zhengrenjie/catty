@@ -15,8 +15,8 @@
 package pink.catty.core.invoker.frame;
 
 import pink.catty.core.Attribute;
-import pink.catty.core.service.MethodModel;
-import pink.catty.core.service.ServiceModel;
+import pink.catty.core.model.MethodModel;
+import pink.catty.core.model.ServiceModel;
 
 public interface Request extends Attribute {
 

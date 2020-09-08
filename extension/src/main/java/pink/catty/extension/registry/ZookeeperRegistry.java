@@ -111,7 +111,7 @@
 //    try {
 //      List<String> metaInfos = client.getChildren().forPath(path);
 //      listener.notify(registryConfig, metaInfos.stream()
-//          .map(s -> MetaInfo.parse(s, metaInfo.getEndpointTypeEnum()))
+//          .map(s -> MetaInfo.Parse(s, metaInfo.getEndpointTypeEnum()))
 //          .collect(Collectors.toList()));
 //    } catch (Exception e) {
 //      throw new RegistryException("ZookeeperRegistry: getChildren error", e);
@@ -122,7 +122,7 @@
 //        if (event.getPath() != null && event.getPath().startsWith(path)) {
 //          List<String> metaInfos = event.getChildren();
 //          listener.notify(registryConfig, metaInfos.stream()
-//              .map(s -> MetaInfo.parse(s, metaInfo.getEndpointTypeEnum()))
+//              .map(s -> MetaInfo.Parse(s, metaInfo.getEndpointTypeEnum()))
 //              .collect(Collectors.toList()));
 //        }
 //      }

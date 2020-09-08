@@ -27,8 +27,8 @@ import pink.catty.core.invoker.frame.DefaultResponse;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
 import pink.catty.core.meta.ServerMeta;
-import pink.catty.core.service.MethodModel;
-import pink.catty.core.service.ServiceModel;
+import pink.catty.core.model.MethodModel;
+import pink.catty.core.model.ServiceModel;
 import pink.catty.core.support.worker.HashLoopGroup;
 import pink.catty.core.support.worker.HashableChooserFactory;
 import pink.catty.core.support.worker.HashableExecutor;
@@ -75,13 +75,8 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server 
           "No such provider found! RpcService name: " + request.getInterfaceName());
     }
 
-    ServiceModel serviceModel = provider
-        .getMeta()
-        .getServiceModel();
-    MethodModel methodModel = provider
-        .getMeta()
-        .getServiceModel()
-        .getMethodMetaByName(request.getMethodName());
+    ServiceModel serviceModel = ServiceModel.Of(provider.getMeta().getServiceName());
+    MethodModel methodModel = serviceModel.getMethodMetaByName(request.getMethodName());
 
     if (methodModel == null) {
       Response response = new DefaultResponse(request.getRequestId());

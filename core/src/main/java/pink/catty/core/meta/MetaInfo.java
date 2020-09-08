@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pink.catty.core.service.ServiceModel;
 import pink.catty.core.utils.ReflectUtils;
 
 /**
@@ -69,11 +68,6 @@ public abstract class MetaInfo {
   private static final String CUSTOM_META_MAP = "customMeta";
 
   public static <T extends MetaInfo> T parseOf(String metaString, Class<T> model) {
-    return parseOf(metaString, model, null);
-  }
-
-  public static <T extends MetaInfo> T parseOf(String metaString, Class<T> model,
-      ServiceModel serviceModel) {
     Map<String, String> map = new HashMap<>();
     String[] metaInfoEntryArray = metaString.split(";");
     for (String entry : metaInfoEntryArray) {
@@ -119,18 +113,6 @@ public abstract class MetaInfo {
         method.invoke(metaInfo, typedValue);
       } catch (IllegalAccessException | InvocationTargetException e) {
         throw new MetaFormatException(e);
-      }
-    }
-
-    if (metaInfo instanceof ProviderMeta || metaInfo instanceof ConsumerMeta) {
-      if (serviceModel == null) {
-        return metaInfo;
-      }
-      if (metaInfo instanceof ProviderMeta) {
-        ((ProviderMeta) metaInfo).setServiceModel(serviceModel);
-      }
-      if (metaInfo instanceof ConsumerMeta) {
-        ((ConsumerMeta) metaInfo).setServiceModel(serviceModel);
       }
     }
 
@@ -189,28 +171,28 @@ public abstract class MetaInfo {
 
   public byte getByteDef(String key, byte def) {
     if (customMeta.containsKey(key)) {
-      return Byte.valueOf(customMeta.get(key));
+      return Byte.parseByte(customMeta.get(key));
     }
     return def;
   }
 
   public short getShortDef(String key, short def) {
     if (customMeta.containsKey(key)) {
-      return Short.valueOf(customMeta.get(key));
+      return Short.parseShort(customMeta.get(key));
     }
     return def;
   }
 
   public int getIntDef(String key, int def) {
     if (customMeta.containsKey(key)) {
-      return Integer.valueOf(customMeta.get(key));
+      return Integer.parseInt(customMeta.get(key));
     }
     return def;
   }
 
   public long getLongDef(String key, long def) {
     if (customMeta.containsKey(key)) {
-      return Long.valueOf(customMeta.get(key));
+      return Long.parseLong(customMeta.get(key));
     }
     return def;
   }
@@ -224,14 +206,14 @@ public abstract class MetaInfo {
 
   public boolean getBoolDef(String key, boolean def) {
     if (customMeta.containsKey(key)) {
-      return Boolean.valueOf(customMeta.get(key));
+      return Boolean.parseBoolean(customMeta.get(key));
     }
     return def;
   }
 
   public double getDoubleDef(String key, double def) {
     if (customMeta.containsKey(key)) {
-      return Double.valueOf(customMeta.get(key));
+      return Double.parseDouble(customMeta.get(key));
     }
     return def;
   }

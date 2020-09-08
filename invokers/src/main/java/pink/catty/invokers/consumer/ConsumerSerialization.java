@@ -23,7 +23,7 @@ import pink.catty.core.invoker.endpoint.Empty;
 import pink.catty.core.invoker.frame.DefaultRequest;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.service.MethodModel;
+import pink.catty.core.model.MethodModel;
 import pink.catty.core.utils.AsyncUtils;
 import pink.catty.core.utils.ExceptionUtils;
 

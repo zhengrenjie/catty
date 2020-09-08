@@ -37,7 +37,7 @@ public class EventBusTest extends EventBus {
     Assert.assertEquals(1, subscribers.get(Event1.class).size());
 
     unregister(listener1);
-    Assert.assertEquals(0, subscribers.size());
+    Assert.assertEquals(0, subscribers.get(Event1.class).size());
   }
 
   @Override

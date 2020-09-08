@@ -27,24 +27,24 @@ import pink.catty.core.invoker.MethodNotFoundException;
 import pink.catty.core.invoker.frame.DefaultRequest;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.service.MethodModel;
-import pink.catty.core.service.ServiceModel;
+import pink.catty.core.model.MethodModel;
+import pink.catty.core.model.ServiceModel;
 import pink.catty.core.utils.RequestIdGenerator;
 
 public class ConsumerHandler<T>
     implements InvocationHandler {
 
   private final Consumer consumer;
+  private final ServiceModel<T> serviceModel;
 
-  public ConsumerHandler(Consumer consumer) {
+  public ConsumerHandler(Consumer consumer, ServiceModel<T> serviceModel) {
     this.consumer = consumer;
+    this.serviceModel = serviceModel;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-    ServiceModel<T> serviceModel = consumer.getMeta().getServiceModel();
 
     /*
      * check if method valid.
@@ -121,11 +121,10 @@ public class ConsumerHandler<T>
   }
 
   @SuppressWarnings("unchecked")
-  public static <E> E getProxy(Consumer consumer) {
-    ServiceModel<E> serviceModel = consumer.getMeta().getServiceModel();
+  public static <E> E getProxy(Consumer consumer, ServiceModel<E> serviceModel) {
     Class<E> clazz = serviceModel.getInterfaceClass();
     E proxy = (E) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz},
-        new ConsumerHandler<E>(consumer));
+        new ConsumerHandler<E>(consumer, serviceModel));
     serviceModel.setTarget(proxy);
     return proxy;
   }

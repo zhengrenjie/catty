@@ -358,23 +358,23 @@ public class ConsumerDefinition {
         .done();
   }
 
-  public static Definition getDefinition() {
+  public static Definition GetDefinition() {
     return DEFINITION;
   }
 
-  public static ConfigDefine getConfigDefine(String key) {
+  public static ConfigDefine GetConfigDefine(String key) {
     return DEFINITION.getConfigDefine(key);
   }
 
-  public static void addConfigDefine(String key, ConfigDefine define) {
+  public static void AddConfigDefine(String key, ConfigDefine define) {
     DEFINITION.addConfigDefine(key, define);
   }
 
-  public static boolean containsName(String name) {
+  public static boolean ContainsName(String name) {
     return DEFINITION.containsName(name);
   }
 
-  public static void removeDefine(String key) {
+  public static void RemoveDefine(String key) {
     DEFINITION.removeDefine(key);
   }
 

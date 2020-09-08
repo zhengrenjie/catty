@@ -14,8 +14,8 @@
  */
 package pink.catty.test.service;
 
-import pink.catty.core.service.RpcMethod;
-import pink.catty.core.service.RpcService;
+import pink.catty.core.model.RpcMethod;
+import pink.catty.core.model.RpcService;
 import java.util.concurrent.CompletableFuture;
 
 @RpcService(name = "AnnotationTest", version = "1.0.2", group = "test", timeout = 500)

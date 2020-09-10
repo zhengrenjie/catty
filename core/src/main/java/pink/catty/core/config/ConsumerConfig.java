@@ -12,74 +12,79 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config.api;
+package pink.catty.core.config;
 
-import pink.catty.core.config.definition.ProviderDefinition;
+import java.util.List;
+import pink.catty.core.Node;
+import pink.catty.core.extension.ExtensionType.EndpointFactoryType;
+import pink.catty.core.extension.ExtensionType.LoadBalanceType;
 import pink.catty.core.extension.ExtensionType.ProtocolType;
 
 /**
  * Read-Only.
  */
-public final class ProviderConfig<T> {
+public final class ConsumerConfig<T> {
 
   /**
-   * Builder, the only entry to construct ProviderConfig.
+   * Builder, the only entry to construct ConsumerConfig.
    *
-   * @return ProviderConfigBuilder instance
+   * @return ConsumerConfigBuilder instance
    */
-  public static <T> ProviderConfigBuilder<T> builder(Class<T> service) {
-    ProviderConfigBuilder<T> builder = new ProviderConfigBuilder<>();
-    ConfigBuilderHelper
-        .PrepareBuilder(builder, ProviderConfig.class, ProviderDefinition.GetDefinition());
+  public static <T> ConsumerConfigBuilder<T> builder(Class<T> service) {
+    ConsumerConfigBuilder<T> builder = new ConsumerConfigBuilder<>();
     builder.setInterfaceClass(service);
     return builder;
   }
 
   /* ****************
-   *     Server
+   *     Client
    * ***************/
 
   /**
-   * server connect timeout. ms
+   * Client connect timeout. ms
    */
-  @Define(ProviderDefinition.LISTEN_PORT)
-  private final int port;
+  private final int connectTimeout;
 
   /**
-   * The io thread number of server. If not use I/O multiplexing like netty(select, epoll, etc.),
+   * Client read timeout. ms
+   */
+  private final int readTimeout;
+
+  /**
+   * If registry is set, then use registry to get remote address first, or use direct address.
+   */
+  private final List<Node> directAddress;
+
+  /**
+   * The io thread number of client. If not use I/O multiplexing like netty(select, epoll, etc.),
    * this config will be ignored.
    */
-  @Define(ProviderDefinition.IO_THREAD_NUMBER)
   private final int ioThreadNum;
 
   /**
    * If use a worker thread pool to fire a request, otherwise use io thread.
    */
-  @Define(ProviderDefinition.USE_WORKER_THREAD)
   private final boolean useWorkerThread;
 
   /**
-   * If USE_IO_THREAD == false, the server will create a worker thread pool to execute tasks.
+   * If USE_IO_THREAD == false, the client will create a worker thread pool to execute tasks.
    * WORKER_MIN_NUM indicated the min thread number of worker thread pool. Otherwise this config
    * will be ignored.
    */
-  @Define(ProviderDefinition.WORKER_MIN_NUM)
   private final int workerMinNum;
 
   /**
-   * If USE_IO_THREAD == false, the server will create a worker thread pool to execute tasks.
+   * If USE_IO_THREAD == false, the client will create a worker thread pool to execute tasks.
    * WORKER_MAX_NUM indicated the max thread number of worker thread pool. Otherwise this config
    * will be ignored.
    */
-  @Define(ProviderDefinition.WORKER_MAX_NUM)
   private final int workerMaxNum;
 
   /**
    * @see pink.catty.core.extension.spi.EndpointFactory
-   * @see pink.catty.core.extension.ExtensionType.EndpointFactoryType
+   * @see EndpointFactoryType
    */
-  @Define(ProviderDefinition.SERVER_TYPE)
-  private final String serverType;
+  private final String clientType;
 
   /* ****************************
    *    Codec & Serialization
@@ -91,7 +96,6 @@ public final class ProviderConfig<T> {
    * @see pink.catty.core.extension.spi.Serialization
    * @see pink.catty.core.extension.ExtensionType.SerializationType
    */
-  @Define(ProviderDefinition.SERIALIZATION)
   private final String serialization;
 
   /**
@@ -100,8 +104,45 @@ public final class ProviderConfig<T> {
    * @see pink.catty.core.extension.spi.Codec
    * @see pink.catty.core.extension.ExtensionType.CodecType
    */
-  @Define(ProviderDefinition.CODEC)
   private final String codec;
+
+  /* ****************************
+   *           Cluster
+   * ***************************/
+
+  /**
+   * If periodically testing the server is alive.
+   */
+  private final boolean useHealthCheck;
+
+  /**
+   * Period of health check. If useHealthCheck == false, this config will be ignored.
+   */
+  private final int healthCheckPeriod;
+
+  /**
+   * @see pink.catty.core.extension.spi.LoadBalance
+   * @see LoadBalanceType
+   */
+  private final String loadBalance;
+
+  /**
+   * @see pink.catty.core.extension.spi.Cluster
+   * @see pink.catty.core.extension.ExtensionType.ClusterType
+   */
+  private final String cluster;
+
+  /**
+   * If cluster type is fail-over, this config indicates the times of retry. If cluster type is NOT
+   * fail-over, this config will be ignored.
+   */
+  private final int retryTimes;
+
+  /**
+   * If cluster type is fail-back, this config indicates the period of reconnecting. If cluster type
+   * is NOT fail-back, this config will be ignored.
+   */
+  private final int failbackPeriod;
 
   /* ****************************
    *          protocol
@@ -111,14 +152,12 @@ public final class ProviderConfig<T> {
    * @see pink.catty.core.extension.spi.Protocol
    * @see ProtocolType
    */
-  @Define(ProviderDefinition.PROTOCOL)
   private final String protocol;
 
   /**
    * Filter list.
    */
-  @Define(ProviderDefinition.FILTER_LIST)
-  private final String filterList;
+  private final List<String> filterList;
 
   /* ****************************
    * interface & method(not support yet)
@@ -127,26 +166,22 @@ public final class ProviderConfig<T> {
   /**
    * The interface of service.
    */
-  @Define(ProviderDefinition.INTERFACE_CLASS)
   private final Class<T> interfaceClass;
 
   /**
    * Name of the interface, if not set, interface' class name will be used.
    */
-  @Define(ProviderDefinition.INTERFACE_NAME)
   private final String interfaceName;
 
   /**
    * Version of the interface.
    */
-  @Define(ProviderDefinition.INTERFACE_VERSION)
   private final String interfaceVersion;
 
   /**
    * The timeout of interface, every methods in this interface have the same timeout unless method
    * has specified its own timeout.
    */
-  @Define(ProviderDefinition.INTERFACE_TIMEOUT)
   private final String interfaceTimeout;
 
   /* ****************************
@@ -154,34 +189,49 @@ public final class ProviderConfig<T> {
    * ***************************/
 
   /**
-   * Registry address, if this config is set, the server.direct_address will be ignored.
+   * Registry address, if this config is set, the client.direct_address will be ignored.
    */
-  @Define(ProviderDefinition.REGISTRY_ADDRESS)
   private final String registryAddress;
 
-  ProviderConfig(int port,
+  ConsumerConfig(int connectTimeout,
+      int readTimeout,
+      List<Node> directAddress,
       int ioThreadNum,
       boolean useWorkerThread,
       int workerMinNum,
       int workerMaxNum,
-      String serverType,
+      String clientType,
       String serialization,
       String codec,
+      boolean useHealthCheck,
+      int healthCheckPeriod,
+      String loadBalance,
+      String cluster,
+      int retryTimes,
+      int failbackPeriod,
       String protocol,
-      String filterList,
+      List<String> filterList,
       Class<T> interfaceClass,
       String interfaceName,
       String interfaceVersion,
       String interfaceTimeout,
       String registryAddress) {
-    this.port = port;
+    this.connectTimeout = connectTimeout;
+    this.readTimeout = readTimeout;
+    this.directAddress = directAddress;
     this.ioThreadNum = ioThreadNum;
     this.useWorkerThread = useWorkerThread;
     this.workerMinNum = workerMinNum;
     this.workerMaxNum = workerMaxNum;
-    this.serverType = serverType;
+    this.clientType = clientType;
     this.serialization = serialization;
     this.codec = codec;
+    this.useHealthCheck = useHealthCheck;
+    this.healthCheckPeriod = healthCheckPeriod;
+    this.loadBalance = loadBalance;
+    this.cluster = cluster;
+    this.retryTimes = retryTimes;
+    this.failbackPeriod = failbackPeriod;
     this.protocol = protocol;
     this.filterList = filterList;
     this.interfaceClass = interfaceClass;
@@ -191,8 +241,16 @@ public final class ProviderConfig<T> {
     this.registryAddress = registryAddress;
   }
 
-  public int getPort() {
-    return port;
+  public int getConnectTimeout() {
+    return connectTimeout;
+  }
+
+  public int getReadTimeout() {
+    return readTimeout;
+  }
+
+  public List<Node> getDirectAddress() {
+    return directAddress;
   }
 
   public int getIoThreadNum() {
@@ -211,8 +269,8 @@ public final class ProviderConfig<T> {
     return workerMaxNum;
   }
 
-  public String getServerType() {
-    return serverType;
+  public String getClientType() {
+    return clientType;
   }
 
   public String getSerialization() {
@@ -223,11 +281,35 @@ public final class ProviderConfig<T> {
     return codec;
   }
 
+  public boolean isUseHealthCheck() {
+    return useHealthCheck;
+  }
+
+  public int getHealthCheckPeriod() {
+    return healthCheckPeriod;
+  }
+
+  public String getLoadBalance() {
+    return loadBalance;
+  }
+
+  public String getCluster() {
+    return cluster;
+  }
+
+  public int getRetryTimes() {
+    return retryTimes;
+  }
+
+  public int getFailbackPeriod() {
+    return failbackPeriod;
+  }
+
   public String getProtocol() {
     return protocol;
   }
 
-  public String getFilterList() {
+  public List<String> getFilterList() {
     return filterList;
   }
 

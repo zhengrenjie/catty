@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config.api;
+package pink.catty.core.config.definition;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -30,7 +30,6 @@ public interface PackageReader<I, O> {
    *
    * @param data data received from tcp.
    * @param out  integral data
-   * @return return the rest of data.
    * @throws BrokenDataPackageException If reading data package occurs some error.
    */
   void readPackage(I data, List<O> out) throws BrokenDataPackageException;

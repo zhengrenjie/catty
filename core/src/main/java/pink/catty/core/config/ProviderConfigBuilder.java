@@ -12,27 +12,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config.api;
+package pink.catty.core.config;
+
+import java.util.LinkedList;
+import java.util.List;
+import pink.catty.core.config.definition.Define;
+import pink.catty.core.config.definition.ProviderDefinition;
 
 public final class ProviderConfigBuilder<T> {
 
+  @Define(ProviderDefinition.LISTEN_PORT)
   private int port;
+
+  @Define(ProviderDefinition.IO_THREAD_NUMBER)
   private int ioThreadNum;
+
+  @Define(ProviderDefinition.USE_WORKER_THREAD)
   private boolean useWorkerThread;
+
+  @Define(ProviderDefinition.WORKER_MIN_NUM)
   private int workerMinNum;
+
+  @Define(ProviderDefinition.WORKER_MAX_NUM)
   private int workerMaxNum;
-  private String clientType;
+
+  @Define(ProviderDefinition.SERVER_TYPE)
+  private String serverType;
+
+  @Define(ProviderDefinition.SERIALIZATION)
   private String serialization;
+
+  @Define(ProviderDefinition.CODEC)
   private String codec;
+
+  @Define(ProviderDefinition.PROTOCOL)
   private String protocol;
-  private String filterList;
+
+  @Define(ProviderDefinition.FILTER_LIST)
+  private List<String> filterList;
+
+  @Define(ProviderDefinition.INTERFACE_CLASS)
   private Class<T> interfaceClass;
+
+  @Define(ProviderDefinition.INTERFACE_NAME)
   private String interfaceName;
+
+  @Define(ProviderDefinition.INTERFACE_VERSION)
   private String interfaceVersion;
+
+  @Define(ProviderDefinition.INTERFACE_VERSION)
   private String interfaceTimeout;
+
+  @Define(ProviderDefinition.REGISTRY_ADDRESS)
   private String registryAddress;
 
   ProviderConfigBuilder() {
+    ConfigBuilderHelper
+        .PrepareBuilder(this, ProviderDefinition.GetDefinition());
   }
 
   public ProviderConfigBuilder<T> setPort(int port) {
@@ -60,8 +96,8 @@ public final class ProviderConfigBuilder<T> {
     return this;
   }
 
-  public ProviderConfigBuilder<T> setClientType(String clientType) {
-    this.clientType = clientType;
+  public ProviderConfigBuilder<T> setServerType(String serverType) {
+    this.serverType = serverType;
     return this;
   }
 
@@ -80,7 +116,15 @@ public final class ProviderConfigBuilder<T> {
     return this;
   }
 
-  public ProviderConfigBuilder<T> setFilterList(String filterList) {
+  public ProviderConfigBuilder<T> addFilterList(String filter) {
+    if (this.filterList == null) {
+      this.filterList = new LinkedList<>();
+    }
+    this.filterList.add(filter);
+    return this;
+  }
+
+  public ProviderConfigBuilder<T> setFilterList(List<String> filterList) {
     this.filterList = filterList;
     return this;
   }
@@ -116,7 +160,7 @@ public final class ProviderConfigBuilder<T> {
         useWorkerThread,
         workerMinNum,
         workerMaxNum,
-        clientType,
+        serverType,
         serialization,
         codec,
         protocol,

@@ -12,18 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.config.api;
+package pink.catty.core.config;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import pink.catty.core.config.ConfigException;
+import pink.catty.core.config.definition.Define;
 import pink.catty.core.config.definition.Definition;
 
 public final class ConfigBuilderHelper {
 
-  static void PrepareBuilder(Object builder, Class<?> configClz, Definition definition) {
+  static void PrepareBuilder(Object builder, Definition definition) {
     Class<?> builderClz = builder.getClass();
 
     /*
@@ -40,7 +40,7 @@ public final class ConfigBuilderHelper {
     /*
      * invoke setting-methods to set default value
      */
-    for (Field field : configClz.getFields()) {
+    for (Field field : builderClz.getFields()) {
       if (!field.isAnnotationPresent(Define.class)) {
         continue;
       }
@@ -60,6 +60,9 @@ public final class ConfigBuilderHelper {
        */
       Define define = field.getAnnotation(Define.class);
       String configDefinitionName = define.value();
+      if (!definition.getConfigDefine(configDefinitionName).hasDefaultValue()) {
+        continue;
+      }
       Object defaultValue = definition
           .getConfigDefine(configDefinitionName)
           .getDefaultValue();

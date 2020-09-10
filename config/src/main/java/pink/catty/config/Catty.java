@@ -1,6 +1,6 @@
 package pink.catty.config;
 
-import pink.catty.config.api.ConsumerConfig;
+import pink.catty.core.config.ConsumerConfig;
 import pink.catty.core.extension.ExtensionFactory;
 import pink.catty.core.extension.ExtensionType.ProtocolType;
 import pink.catty.core.extension.spi.Protocol;
@@ -13,10 +13,9 @@ public class Catty<T> {
 
   private T ref;
 
-  @SuppressWarnings("unchecked")
-  public T refer(ConsumerConfig config) {
+  public T refer(ConsumerConfig<T> config) {
     if (ref == null) {
-      ServiceModel<T> serviceModel = ServiceModel.Parse((Class<T>)config.getInterfaceClass());
+      ServiceModel<T> serviceModel = ServiceModel.Parse(config.getInterfaceClass());
 
       ConsumerMeta consumerMeta = new ConsumerMeta();
       consumerMeta.setSerialization(config.getSerialization());
@@ -27,7 +26,7 @@ public class Catty<T> {
       consumerMeta.setLoadBalance(config.getLoadBalance());
       consumerMeta.setRetryTimes(config.getRetryTimes());
       consumerMeta.setRecoveryPeriod(config.getFailbackPeriod());
-//      consumerMeta.setDirectAddress(config.getDirectAddress());
+      consumerMeta.setDirectAddress(config.getDirectAddress());
       consumerMeta.setTimeout(config.getReadTimeout());
       consumerMeta.setServiceName(serviceModel.getServiceName());
 

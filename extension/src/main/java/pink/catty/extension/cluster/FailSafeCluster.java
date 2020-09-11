@@ -28,7 +28,7 @@ public class FailSafeCluster extends AbstractCluster {
   @Override
   public Response onError(Consumer invoker, Consumer failedConsumer, Request request,
       RuntimeException e) {
-    logger.error("FailSafeCluster, meta: {}", failedConsumer.getMeta(), e);
+    logger.error("FailSafeCluster, meta: {}", failedConsumer.config(), e);
     Response response = new DefaultResponse(request.getRequestId());
     response.setValue(null);
     return response;

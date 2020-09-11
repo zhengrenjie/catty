@@ -14,10 +14,11 @@
  */
 package pink.catty.core.extension.spi;
 
+import java.net.InetSocketAddress;
+import pink.catty.core.config.ConsumerConfig;
+import pink.catty.core.config.ProviderConfig;
 import pink.catty.core.invoker.endpoint.Client;
 import pink.catty.core.invoker.endpoint.Server;
-import pink.catty.core.meta.ClientMeta;
-import pink.catty.core.meta.ServerMeta;
 
 /**
  * EndpointFactory creates Client & Server and cache them. Client & Server is an endpoint to
@@ -30,8 +31,8 @@ import pink.catty.core.meta.ServerMeta;
 @SPI(scope = Scope.SINGLETON)
 public interface EndpointFactory {
 
-  Client getClient(ClientMeta clientMeta);
+  Client getClient(ConsumerConfig config, InetSocketAddress address);
 
-  Server getServer(ServerMeta serverMeta);
+  Server getServer(ProviderConfig config, InetSocketAddress address);
 
 }

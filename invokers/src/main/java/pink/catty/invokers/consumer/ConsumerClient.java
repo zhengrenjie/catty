@@ -14,26 +14,26 @@
  */
 package pink.catty.invokers.consumer;
 
+import pink.catty.core.config.ConsumerConfig;
 import pink.catty.core.invoker.Consumer;
 import pink.catty.core.invoker.Invoker;
 import pink.catty.core.invoker.endpoint.Client;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.ConsumerMeta;
 
 public class ConsumerClient implements Consumer {
 
   private volatile Client client;
-  private ConsumerMeta consumerMeta;
+  private final ConsumerConfig config;
 
-  public ConsumerClient(Client client, ConsumerMeta consumerMeta) {
+  public ConsumerClient(Client client, ConsumerConfig config) {
     this.client = client;
-    this.consumerMeta = consumerMeta;
+    this.config = config;
   }
 
   @Override
-  public ConsumerMeta getMeta() {
-    return consumerMeta;
+  public ConsumerConfig config() {
+    return config;
   }
 
   @Override
@@ -42,12 +42,12 @@ public class ConsumerClient implements Consumer {
   }
 
   @Override
-  public Invoker getNext() {
+  public synchronized Invoker getNext() {
     return client;
   }
 
   @Override
-  public void setNext(Invoker invoker) {
+  public synchronized void setNext(Invoker invoker) {
     if (invoker instanceof Client) {
       this.client = (Client) invoker;
     }

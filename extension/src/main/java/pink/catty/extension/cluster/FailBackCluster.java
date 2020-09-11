@@ -20,6 +20,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pink.catty.core.config.ConsumerConfig;
 import pink.catty.core.extension.Extension;
 import pink.catty.core.extension.ExtensionFactory;
 import pink.catty.core.extension.ExtensionType.ClusterType;
@@ -30,7 +31,6 @@ import pink.catty.core.invoker.LinkedInvoker;
 import pink.catty.core.invoker.endpoint.Client;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.ConsumerMeta;
 import pink.catty.core.service.HealthCheckException;
 import pink.catty.core.support.ConcurrentHashSet;
 import pink.catty.core.utils.EndpointUtils;
@@ -41,7 +41,7 @@ import pink.catty.invokers.consumer.ConsumerClient;
 public class FailBackCluster extends FailOverCluster {
 
   private static final String TIMER_NAME = "CATTY_RECOVERY";
-  private static final Set<ConsumerMeta> ON_RECOVERY;
+  private static final Set<ConsumerConfig> ON_RECOVERY;
   private static Timer TIMER;
 
   static {
@@ -54,10 +54,10 @@ public class FailBackCluster extends FailOverCluster {
       RuntimeException e) {
 
     EndpointUtils.destroyInvoker(failedConsumer);
-    final ConsumerMeta failedConsumerMeta = failedConsumer.getMeta();
+    final ConsumerConfig failedConsumerMeta = failedConsumer.config();
     final String metaString = failedConsumerMeta.toString();
 
-    int recoveryDelay = failedConsumerMeta.getRecoveryPeriod();
+    int recoveryDelay = failedConsumerMeta.getFailbackPeriod();
 
     synchronized (ON_RECOVERY) {
 
@@ -84,11 +84,11 @@ public class FailBackCluster extends FailOverCluster {
 
     private final int period;
     private final String metaString;
-    private final ConsumerMeta failedConsumerMeta;
+    private final ConsumerConfig failedConsumerMeta;
     private final Consumer failedConsumer;
 
     public RecoveryTask(int period, String metaString,
-        ConsumerMeta failedConsumerMeta, Consumer failedConsumer) {
+        ConsumerConfig failedConsumerMeta, Consumer failedConsumer) {
       this.period = period;
       this.metaString = metaString;
       this.failedConsumerMeta = failedConsumerMeta;
@@ -106,16 +106,15 @@ public class FailBackCluster extends FailOverCluster {
       logger.info("Recovery: begin recovery of endpoint: {}", metaString);
 
       try {
-        EndpointFactory endpointFactory = ExtensionFactory.endpointFactory()
-            .getExtension(failedConsumerMeta.getEndpoint());
-        Client newClient = endpointFactory.getClient(failedConsumerMeta);
-
         Invoker next = failedConsumer;
         while (next instanceof LinkedInvoker) {
-          if (((LinkedInvoker) next).getNext() instanceof ConsumerClient) {
-            ConsumerClient newConsumerClient = new ConsumerClient(newClient,
-                failedConsumerMeta);
-            ((LinkedInvoker) next).setNext(newConsumerClient);
+          if (next instanceof ConsumerClient) {
+            Client oldClient = (Client) ((ConsumerClient) next).getNext();
+            EndpointFactory endpointFactory = ExtensionFactory.endpointFactory()
+                .getExtension(failedConsumerMeta.getClientType());
+            Client newClient = endpointFactory
+                .getClient(failedConsumerMeta, oldClient.remoteAddress());
+            ((ConsumerClient) next).setNext(newClient);
             break;
           } else {
             next = ((LinkedInvoker) next).getNext();

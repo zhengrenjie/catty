@@ -14,7 +14,10 @@
  */
 package pink.catty.extension.protocol;
 
-import pink.catty.core.Node;
+import java.net.InetSocketAddress;
+import java.util.List;
+import pink.catty.core.config.ConsumerConfig;
+import pink.catty.core.config.ProviderConfig;
 import pink.catty.core.extension.Extension;
 import pink.catty.core.extension.ExtensionFactory;
 import pink.catty.core.extension.ExtensionType.ProtocolType;
@@ -30,9 +33,7 @@ import pink.catty.core.invoker.Provider;
 import pink.catty.core.invoker.endpoint.Client;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.ConsumerMeta;
-import pink.catty.core.meta.MetaInfo;
-import pink.catty.core.meta.ProviderMeta;
+import pink.catty.core.support.Node;
 import pink.catty.invokers.consumer.ConsumerClient;
 import pink.catty.invokers.consumer.ConsumerCluster;
 import pink.catty.invokers.consumer.ConsumerHealthCheck;
@@ -44,53 +45,46 @@ import pink.catty.invokers.provider.ProviderSerialization;
 public class CattyProtocol implements Protocol {
 
   @Override
-  public Consumer buildConsumer(ConsumerMeta meta) {
-
-    /*
-     * If only one remote address is specified, CattyProtocol will not create cluster.
-     */
-    if (meta.getDirectAddress() != null && meta.getDirectAddress().size() == 1) {
-
-      // copy meta
-      String metaString = meta.toString();
-      ConsumerMeta newMetaInfo = MetaInfo.parseOf(metaString, ConsumerMeta.class);
-
-      // set address
-      Node address = meta.getDirectAddress().get(0);
-      newMetaInfo.setRemoteIp(address.getIp());
-      newMetaInfo.setRemotePort(address.getPort());
-
-      return createConsumerLink(newMetaInfo);
-    }
-
-    /*
-     * Else, if more than one remote address is specified, CattyProtocol will create a cluster.
-     */
+  public Consumer buildConsumer(ConsumerConfig config) {
 
     // 1.Create Cluster
-    Cluster cluster = ExtensionFactory.cluster().getExtension(meta.getCluster());
+    Cluster cluster = ExtensionFactory.cluster().getExtension(config.getCluster());
 
     // 2.Create LoadBalance
-    LoadBalance loadBalance = ExtensionFactory.loadBalance().getExtension(meta.getLoadBalance());
+    LoadBalance loadBalance = ExtensionFactory.loadBalance().getExtension(config.getLoadBalance());
 
     // 3.Create ClusterInvoker
-    Consumer consumer = new ConsumerCluster(meta, cluster, loadBalance);
+    Consumer consumer = new ConsumerCluster(config, cluster, loadBalance);
 
     // 4.Check if direct address set. Build Cluster.
-    if (meta.getDirectAddress() != null && meta.getDirectAddress().size() > 0) {
-      String metaString = meta.toString();
-      for (Node address : meta.getDirectAddress()) {
+    if (config.getDirectAddress() != null && config.getDirectAddress().size() > 0) {
+      List<Node> nodeList = config.getDirectAddress();
+      for (Node address : nodeList) {
         Consumer toRegister;
-        ConsumerMeta newMetaInfo = MetaInfo.parseOf(metaString, ConsumerMeta.class);
-        newMetaInfo.setRemoteIp(address.getIp());
-        newMetaInfo.setRemotePort(address.getPort());
 
-        toRegister = createConsumerLink(newMetaInfo);
+        // Create ConsumerClient.
+        EndpointFactory factory = ExtensionFactory
+            .endpointFactory()
+            .getExtension(config.getClientType());
+        Client client = factory
+            .getClient(config, new InetSocketAddress(address.getIp(), address.getPort()));
+        toRegister = new ConsumerClient(client, config);
+
+        // Create SerializationConsumer
+        Serialization serialization = ExtensionFactory
+            .serialization()
+            .getExtension(config.getSerialization());
+        toRegister = new ConsumerSerialization(toRegister, serialization);
+
+        // Create HealthCheckConsumer
+        if (config.getHealthCheckPeriod() > 0) {
+          toRegister = new ConsumerHealthCheck(toRegister);
+        }
 
         // Wrap Filter
-        if (newMetaInfo.getFilterNames() != null && newMetaInfo.getFilterNames().size() > 0) {
-          for (int i = newMetaInfo.getFilterNames().size() - 1; i >= 0; i--) {
-            String filterName = newMetaInfo.getFilterNames().get(i);
+        if (config.getFilterList() != null && config.getFilterList().size() > 0) {
+          for (int i = config.getFilterList().size() - 1; i >= 0; i--) {
+            String filterName = (String) config.getFilterList().get(i);
             Filter filter = ExtensionFactory
                 .filter()
                 .getExtension(filterName);
@@ -98,8 +92,8 @@ public class CattyProtocol implements Protocol {
             final Consumer last = toRegister;
             toRegister = new Consumer() {
               @Override
-              public ConsumerMeta getMeta() {
-                return last.getMeta();
+              public ConsumerConfig config() {
+                return last.config();
               }
 
               @Override
@@ -121,7 +115,7 @@ public class CattyProtocol implements Protocol {
         }
 
         // Register to Cluster
-        cluster.registerInvoker(newMetaInfo.toString(), toRegister);
+        cluster.registerInvoker(address.toString(), toRegister);
       }
     }
 
@@ -129,17 +123,17 @@ public class CattyProtocol implements Protocol {
   }
 
   @Override
-  public Provider buildProvider(ProviderMeta meta) {
+  public Provider buildProvider(ProviderConfig config) {
     Provider provider;
     Serialization serialization = ExtensionFactory
         .serialization()
-        .getExtension(meta.getSerialization());
-    provider = new ProviderInvoker(meta);
+        .getExtension(config.getSerialization());
+    provider = new ProviderInvoker(config);
 
     // Wrap Filter
-    if (meta.getFilterNames() != null && meta.getFilterNames().size() > 0) {
-      for (int i = meta.getFilterNames().size() - 1; i >= 0; i--) {
-        String filterName = meta.getFilterNames().get(i);
+    if (config.getFilterList() != null && config.getFilterList().size() > 0) {
+      for (int i = config.getFilterList().size() - 1; i >= 0; i--) {
+        String filterName = (String) config.getFilterList().get(i);
         Filter filter = ExtensionFactory
             .filter()
             .getExtension(filterName);
@@ -147,8 +141,8 @@ public class CattyProtocol implements Protocol {
         final Provider last = provider;
         provider = new Provider() {
           @Override
-          public ProviderMeta getMeta() {
-            return last.getMeta();
+          public ProviderConfig config() {
+            return last.config();
           }
 
           @Override
@@ -170,27 +164,6 @@ public class CattyProtocol implements Protocol {
     }
 
     return new ProviderSerialization(provider, serialization);
-  }
-
-  private Consumer createConsumerLink(ConsumerMeta consumerMeta) {
-    // Create ConsumerClient.
-    EndpointFactory factory = ExtensionFactory
-        .endpointFactory()
-        .getExtension(consumerMeta.getEndpoint());
-    Client client = factory.getClient(consumerMeta);
-    Consumer consumer = new ConsumerClient(client, consumerMeta);
-
-    // Create SerializationConsumer
-    Serialization serialization = ExtensionFactory
-        .serialization()
-        .getExtension(consumerMeta.getSerialization());
-    consumer = new ConsumerSerialization(consumer, serialization);
-
-    // Create HealthCheckConsumer
-    if (consumerMeta.getHealthCheckPeriod() > 0) {
-      consumer = new ConsumerHealthCheck(consumer);
-    }
-    return consumer;
   }
 
 }

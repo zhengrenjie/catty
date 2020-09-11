@@ -12,9 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pink.catty.core;
+package pink.catty.core.support;
 
 import java.util.Objects;
+import pink.catty.core.IllegalAddressException;
 
 public class Node {
 

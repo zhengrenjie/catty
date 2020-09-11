@@ -20,7 +20,7 @@ import pink.catty.core.extension.ExtensionType.ProtocolType;
 /**
  * Read-Only.
  */
-public final class ProviderConfig<T> {
+public final class ProviderConfig<T> extends Config implements EndpointConfig {
 
   /**
    * Builder, the only entry to construct ProviderConfig.

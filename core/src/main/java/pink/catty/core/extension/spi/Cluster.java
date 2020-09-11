@@ -15,13 +15,10 @@
 package pink.catty.core.extension.spi;
 
 import java.util.List;
-import pink.catty.core.config.RegistryConfig;
-import pink.catty.core.extension.spi.Registry.NotifyListener;
 import pink.catty.core.invoker.Consumer;
 import pink.catty.core.invoker.InvokerRegistry;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.MetaInfo;
 
 /**
  * One Service's RPC invoker chain with cluster.
@@ -41,7 +38,7 @@ import pink.catty.core.meta.MetaInfo;
  * Cluster
  */
 @SPI(scope = Scope.PROTOTYPE)
-public interface Cluster extends InvokerRegistry<Consumer>, NotifyListener {
+public interface Cluster extends InvokerRegistry<Consumer> {
 
   void destroy();
 
@@ -57,11 +54,4 @@ public interface Cluster extends InvokerRegistry<Consumer>, NotifyListener {
 
   @Override
   Consumer unregisterInvoker(String serviceIdentify);
-
-  /*
-   * implement NotifyListener
-   */
-  @Override
-  default void notify(RegistryConfig registryConfig, List<MetaInfo> metaInfoCollection) {
-  }
 }

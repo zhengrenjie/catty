@@ -14,22 +14,23 @@
  */
 package pink.catty.core.invoker.endpoint;
 
+import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import pink.catty.core.extension.spi.Codec;
+import pink.catty.core.config.ConsumerConfig;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.ClientMeta;
 
 public abstract class AbstractClient extends AbstractEndpoint implements Client {
 
-  private ClientMeta clientMeta;
-  private Map<Long, Response> currentTask = new ConcurrentHashMap<>();
+  private final ConsumerConfig config;
+  private final Map<Long, Response> currentTask = new ConcurrentHashMap<>();
+  private final InetSocketAddress remote;
 
-  public AbstractClient(ClientMeta clientMeta, Codec codec) {
-    super(codec);
-    this.clientMeta = clientMeta;
+  public AbstractClient(ConsumerConfig config, InetSocketAddress remote) {
+    super(config);
+    this.config = config;
+    this.remote = remote;
   }
 
   public Response getResponseFuture(long requestId) {
@@ -41,13 +42,13 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
   }
 
   @Override
-  public ClientMeta getMeta() {
-    return clientMeta;
+  public ConsumerConfig config() {
+    return config;
   }
 
   @Override
-  public Executor getExecutor() {
-    return null;
+  public InetSocketAddress remoteAddress() {
+    return remote;
   }
 
   protected abstract void doOpen();
@@ -63,11 +64,11 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
       return false;
     }
     AbstractClient that = (AbstractClient) o;
-    return Objects.equals(clientMeta, that.clientMeta);
+    return Objects.equals(config, that.config);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(clientMeta);
+    return Objects.hash(config);
   }
 }

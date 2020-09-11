@@ -15,7 +15,7 @@
 package pink.catty.core.config;
 
 import java.util.List;
-import pink.catty.core.Node;
+import pink.catty.core.support.Node;
 import pink.catty.core.extension.ExtensionType.EndpointFactoryType;
 import pink.catty.core.extension.ExtensionType.LoadBalanceType;
 import pink.catty.core.extension.ExtensionType.ProtocolType;
@@ -23,7 +23,7 @@ import pink.catty.core.extension.ExtensionType.ProtocolType;
 /**
  * Read-Only.
  */
-public final class ConsumerConfig<T> {
+public final class ConsumerConfig<T> extends Config implements EndpointConfig {
 
   /**
    * Builder, the only entry to construct ConsumerConfig.

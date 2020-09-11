@@ -39,7 +39,6 @@ import pink.catty.core.extension.spi.EndpointFactory;
 import pink.catty.core.extension.spi.Filter;
 import pink.catty.core.extension.spi.LoadBalance;
 import pink.catty.core.extension.spi.Protocol;
-import pink.catty.core.extension.spi.Registry;
 import pink.catty.core.extension.spi.SPI;
 import pink.catty.core.extension.spi.Scope;
 import pink.catty.core.extension.spi.Serialization;
@@ -48,10 +47,10 @@ import pink.catty.core.utils.ReflectUtils;
 
 /**
  * Catty has some build-in extension interface to customizing, such as: {@link Serialization} {@link
- * Invoker} {@link Protocol} {@link Codec} {@link LoadBalance} {@link EndpointFactory} {@link
- * Registry}. And there are also some build-in implements of those extension interface you can find
- * them in extension-module. You can use Reference and Exporter(you can find both in config-module)
- * to specify different implements to make Catty work in different way.
+ * Invoker} {@link Protocol} {@link Codec} {@link LoadBalance} {@link EndpointFactory}. And there
+ * are also some build-in implements of those extension interface you can find them in
+ * extension-module. You can use Reference and Exporter(you can find both in config-module) to
+ * specify different implements to make Catty work in different way.
  * <p>
  * A class that implements the extension interface is expected to have a constructor with no
  * parameter.
@@ -69,8 +68,7 @@ import pink.catty.core.utils.ReflectUtils;
  * @see Serialization
  * @see Codec
  * @see LoadBalance
- * @see EndpointFactory
- * @see Registry
+ * @see EndpointFactory // * @see Registry
  * @see Invoker
  * @see Cluster
  * @see Filter
@@ -97,7 +95,7 @@ public final class ExtensionFactory<T> {
     EXTENSION_FACTORY.put(Codec.class, new ExtensionFactory<>(Codec.class));
     EXTENSION_FACTORY.put(Protocol.class, new ExtensionFactory<>(Protocol.class));
     EXTENSION_FACTORY.put(EndpointFactory.class, new ExtensionFactory<>(EndpointFactory.class));
-    EXTENSION_FACTORY.put(Registry.class, new ExtensionFactory<>(Registry.class));
+//    EXTENSION_FACTORY.put(Registry.class, new ExtensionFactory<>(Registry.class));
     EXTENSION_FACTORY.put(Cluster.class, new ExtensionFactory<>(Cluster.class));
     EXTENSION_FACTORY.put(Filter.class, new ExtensionFactory<>(Filter.class));
 
@@ -313,9 +311,9 @@ public final class ExtensionFactory<T> {
    *
    * @return ExtensionFactory<Registry>
    */
-  public static ExtensionFactory<Registry> registry() {
-    return getExtensionFactory(Registry.class);
-  }
+//  public static ExtensionFactory<Registry> registry() {
+//    return getExtensionFactory(Registry.class);
+//  }
 
   /**
    * It is a shortcut for ExtensionFactory.getExtensionFactory(Cluster.class)

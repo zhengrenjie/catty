@@ -21,7 +21,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import pink.catty.config.api.ClientConfig;
 import pink.catty.config.api.ProtocolConfig;
 import pink.catty.config.api.ServerConfig;
-import pink.catty.core.Node;
+import pink.catty.core.support.Node;
 
 public class XsdTest {
 

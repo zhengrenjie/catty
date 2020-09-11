@@ -18,10 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pink.catty.core.config.RegistryConfig;
 import pink.catty.core.invoker.AbstractInvokerRegistry;
 import pink.catty.core.invoker.Consumer;
-import pink.catty.core.meta.MetaInfo;
 import pink.catty.core.utils.EndpointUtils;
 
 public abstract class AbstractCluster extends AbstractInvokerRegistry<Consumer> implements Cluster {
@@ -38,8 +36,4 @@ public abstract class AbstractCluster extends AbstractInvokerRegistry<Consumer> 
     return Collections.unmodifiableList(invokerList);
   }
 
-  @Override
-  public void notify(RegistryConfig registryConfig, List<MetaInfo> metaInfoCollection) {
-
-  }
 }

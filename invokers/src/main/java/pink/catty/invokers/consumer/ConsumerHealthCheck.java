@@ -20,11 +20,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
+import pink.catty.core.config.ConsumerConfig;
 import pink.catty.core.invoker.AbstractConsumer;
 import pink.catty.core.invoker.Consumer;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.ConsumerMeta;
 import pink.catty.core.service.HealthCheckException;
 import pink.catty.core.utils.HeartBeatUtils;
 
@@ -38,15 +38,15 @@ public class ConsumerHealthCheck extends AbstractConsumer {
   }
 
   private final int period;
-  private ConsumerMeta metaInfo;
+  private ConsumerConfig config;
   private boolean isTimerStart;
   private volatile RuntimeException heartBeatThrowable;
   private AtomicInteger checkErrorRecord;
 
   public ConsumerHealthCheck(Consumer next) {
     super(next);
-    this.metaInfo = next.getMeta();
-    this.period = metaInfo.getHealthCheckPeriod();
+    this.config = next.config();
+    this.period = config.getHealthCheckPeriod();
     this.isTimerStart = false;
     this.checkErrorRecord = new AtomicInteger(0);
   }

@@ -19,7 +19,7 @@ import java.util.Map;
 
 public abstract class AbstractAttribute implements Attribute {
 
-  private Map<String, Object> attributes;
+  private final Map<String, Object> attributes;
 
   public AbstractAttribute() {
     this(new HashMap<>());

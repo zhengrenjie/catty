@@ -86,32 +86,32 @@
 //  }
 //
 //  @Override
-//  public void register(MetaInfo metaInfo) {
+//  public void register(MetaInfo config) {
 //    checkClientStatus();
-//    String path = buildPath(metaInfo, false);
+//    String path = buildPath(config, false);
 //    if (!exist(path)) {
 //      buildPath(path);
 //    }
-//    path += PATH_SEP + metaInfo.toString();
+//    path += PATH_SEP + config.toString();
 //    ephemeralPath(path);
 //  }
 //
 //  @Override
-//  public void unregister(MetaInfo metaInfo) {
+//  public void unregister(MetaInfo config) {
 //    checkClientStatus();
-//    String path = buildPath(metaInfo, false) + PATH_SEP + metaInfo.toString();
+//    String path = buildPath(config, false) + PATH_SEP + config.toString();
 //    delete(path);
 //  }
 //
 //  @Override
-//  public void subscribe(MetaInfo metaInfo, NotifyListener listener) {
+//  public void subscribe(MetaInfo config, NotifyListener listener) {
 //    checkClientStatus();
 //
-//    String path = buildPath(metaInfo, true);
+//    String path = buildPath(config, true);
 //    try {
 //      List<String> metaInfos = client.getChildren().forPath(path);
 //      listener.notify(registryConfig, metaInfos.stream()
-//          .map(s -> MetaInfo.Parse(s, metaInfo.getEndpointTypeEnum()))
+//          .map(s -> MetaInfo.Parse(s, config.getEndpointTypeEnum()))
 //          .collect(Collectors.toList()));
 //    } catch (Exception e) {
 //      throw new RegistryException("ZookeeperRegistry: getChildren error", e);
@@ -122,7 +122,7 @@
 //        if (event.getPath() != null && event.getPath().startsWith(path)) {
 //          List<String> metaInfos = event.getChildren();
 //          listener.notify(registryConfig, metaInfos.stream()
-//              .map(s -> MetaInfo.Parse(s, metaInfo.getEndpointTypeEnum()))
+//              .map(s -> MetaInfo.Parse(s, config.getEndpointTypeEnum()))
 //              .collect(Collectors.toList()));
 //        }
 //      }
@@ -131,7 +131,7 @@
 //  }
 //
 //  @Override
-//  public void unsubscribe(MetaInfo metaInfo, NotifyListener listener) {
+//  public void unsubscribe(MetaInfo config, NotifyListener listener) {
 //
 //  }
 //

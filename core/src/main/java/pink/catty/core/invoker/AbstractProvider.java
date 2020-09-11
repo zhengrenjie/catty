@@ -14,7 +14,7 @@
  */
 package pink.catty.core.invoker;
 
-import pink.catty.core.meta.ProviderMeta;
+import pink.catty.core.config.ProviderConfig;
 
 public abstract class AbstractProvider
     extends AbstractInvoker
@@ -25,7 +25,7 @@ public abstract class AbstractProvider
   }
 
   @Override
-  public ProviderMeta getMeta() {
-    return (ProviderMeta) next.getMeta();
+  public ProviderConfig config() {
+    return (ProviderConfig) next.config();
   }
 }

@@ -14,41 +14,39 @@
  */
 package pink.catty.core.extension.spi;
 
+import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pink.catty.core.Node;
+import pink.catty.core.config.ConsumerConfig;
+import pink.catty.core.config.ProviderConfig;
 import pink.catty.core.extension.ExtensionFactory;
 import pink.catty.core.invoker.endpoint.Client;
 import pink.catty.core.invoker.endpoint.Server;
-import pink.catty.core.meta.ClientMeta;
-import pink.catty.core.meta.ServerMeta;
 
 public abstract class AbstractEndpointFactory implements EndpointFactory {
 
   protected Logger logger = LoggerFactory.getLogger(getClass());
 
-  private static final Map<Node, Client> clientCache = new ConcurrentHashMap<>();
+  private static final Map<InetSocketAddress, Client> clientCache = new ConcurrentHashMap<>();
   private static final Map<Integer, Server> serverCache = new ConcurrentHashMap<>();
 
   @Override
-  public Client getClient(ClientMeta clientMeta) {
-    Node address = new Node(clientMeta.getRemoteIp(), clientMeta.getRemotePort());
+  public Client getClient(ConsumerConfig config, InetSocketAddress address) {
     Client client = clientCache.get(address);
-    if(client != null && client.isClosed()) {
+    if (client != null && client.isClosed()) {
       clientCache.remove(address);
       client = null;
     }
     if (client == null) {
       synchronized (clientCache) {
         if (!clientCache.containsKey(address)) {
-          Codec codec = ExtensionFactory.codec().getExtension(clientMeta.getCodec());
-          client = doCreateClient(clientMeta, codec);
+          client = doCreateClient(config, address);
           client.open();
           clientCache.put(address, client);
           logger.info("EndpointFactory: a new client has bean created. ip: {}, port: {}.",
-              clientMeta.getRemoteIp(), clientMeta.getRemotePort());
+              address.getAddress(), address.getPort());
         }
       }
     }
@@ -56,30 +54,30 @@ public abstract class AbstractEndpointFactory implements EndpointFactory {
   }
 
   @Override
-  public Server getServer(ServerMeta serverMeta) {
-    int port = serverMeta.getLocalPort();
+  public Server getServer(ProviderConfig config, InetSocketAddress address) {
+    int port = address.getPort();
     Server server = serverCache.get(port);
-    if(server != null && server.isClosed()) {
+    if (server != null && server.isClosed()) {
       serverCache.remove(port);
       server = null;
     }
     if (server == null) {
       synchronized (serverCache) {
         if (!serverCache.containsKey(port)) {
-          Codec codec = ExtensionFactory.codec().getExtension(serverMeta.getCodec());
-          server = doCreateServer(serverMeta, codec);
+          Codec codec = ExtensionFactory.codec().getExtension(config.getCodec());
+          server = doCreateServer(config);
           server.open();
           serverCache.put(port, server);
           logger.info("EndpointFactory: a new server has bean created. ip: {}, port: {}.",
-              serverMeta.getLocalIp(), serverMeta.getLocalPort());
+              address.getAddress(), address.getPort());
         }
       }
     }
     return server;
   }
 
-  protected abstract Client doCreateClient(ClientMeta clientMeta, Codec codec);
+  protected abstract Client doCreateClient(ConsumerConfig config, InetSocketAddress address);
 
-  protected abstract Server doCreateServer(ServerMeta serverMeta, Codec codec);
+  protected abstract Server doCreateServer(ProviderConfig config);
 
 }

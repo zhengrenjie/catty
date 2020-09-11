@@ -24,13 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pink.catty.core.CattyException;
 import pink.catty.core.RpcTimeoutException;
+import pink.catty.core.config.ConsumerConfig;
 import pink.catty.core.extension.spi.Cluster;
 import pink.catty.core.extension.spi.LoadBalance;
 import pink.catty.core.invoker.AbstractConsumer;
 import pink.catty.core.invoker.Consumer;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.ConsumerMeta;
 import pink.catty.core.support.timer.HashedWheelTimer;
 import pink.catty.core.support.timer.Timer;
 
@@ -43,20 +43,20 @@ public class ConsumerCluster extends AbstractConsumer {
 
   private final Cluster cluster;
   private final LoadBalance loadBalance;
-  private final ConsumerMeta consumerMeta;
+  private final ConsumerConfig config;
   private Timer timer;
 
-  public ConsumerCluster(ConsumerMeta consumerMeta, Cluster cluster, LoadBalance loadBalance) {
+  public ConsumerCluster(ConsumerConfig config, Cluster cluster, LoadBalance loadBalance) {
     super(null);
-    this.consumerMeta = consumerMeta;
+    this.config = config;
     this.cluster = cluster;
     this.loadBalance = loadBalance;
     this.timer = new HashedWheelTimer();
   }
 
   @Override
-  public ConsumerMeta getMeta() {
-    return this.consumerMeta;
+  public ConsumerConfig config() {
+    return this.config;
   }
 
   @SuppressWarnings("unchecked")
@@ -77,9 +77,9 @@ public class ConsumerCluster extends AbstractConsumer {
 
     // check if there is no candidate.
     if (candidates.size() == 0) {
-      logger.error("ConsumerCluster, no valid endpoint. meta: {}", getMeta());
+      logger.error("ConsumerCluster, no valid endpoint. meta: {}", config());
       throw new CattyException(
-          "ConsumerCluster, no valid endpoint. meta: " + getMeta());
+          "ConsumerCluster, no valid endpoint. meta: " + config());
     }
 
     // select one consumer from candidates.
@@ -89,7 +89,7 @@ public class ConsumerCluster extends AbstractConsumer {
     try {
       // if time out.
 
-      int timeout = min(consumer.getMeta().getTimeout(),
+      int timeout = min(consumer.config().getReadTimeout(),
           request.getServiceModel().getTimeout(),
           request.getInvokedMethod().getTimeout()
       );

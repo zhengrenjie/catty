@@ -25,7 +25,6 @@ import pink.catty.core.extension.spi.Codec.DataTypeEnum;
 import pink.catty.core.invoker.endpoint.Void;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.support.worker.HashableExecutor;
 
 public class ServerChannelHandler extends ChannelDuplexHandler {
 
@@ -46,17 +45,12 @@ public class ServerChannelHandler extends ChannelDuplexHandler {
           "ServerChannelHandler: unsupported message type when decode: " + object.getClass());
     }
     if (nettyServer.getExecutor() != null) {
-      if (nettyServer.getMeta().isNeedOrder()) {
-        ((HashableExecutor) nettyServer.getExecutor())
-            .submit(hashCode(), () -> processRequest(ctx, (Request) object));
-      } else {
 
-        /*
-         * NOTICE: getExecutor().submit() might sallow exceptions. So processRequest() method must
-         * deal exceptions itself.
-         */
-        nettyServer.getExecutor().submit(() -> processRequest(ctx, (Request) object));
-      }
+      /*
+       * NOTICE: getExecutor().submit() might sallow exceptions. So processRequest() method must
+       * deal exceptions itself.
+       */
+      nettyServer.getExecutor().submit(() -> processRequest(ctx, (Request) object));
     } else {
       processRequest(ctx, (Request) object);
     }

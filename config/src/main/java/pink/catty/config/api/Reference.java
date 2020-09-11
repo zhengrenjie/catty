@@ -17,14 +17,7 @@ package pink.catty.config.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pink.catty.core.config.RegistryConfig;
-import pink.catty.core.extension.ExtensionFactory;
-import pink.catty.core.extension.ExtensionType.ProtocolType;
-import pink.catty.core.extension.spi.Protocol;
-import pink.catty.core.extension.spi.Registry;
-import pink.catty.core.invoker.Consumer;
-import pink.catty.core.meta.ConsumerMeta;
 import pink.catty.core.model.ServiceModel;
-import pink.catty.invokers.consumer.ConsumerHandler;
 
 /**
  * Reference is the entrance to the RPC client. After all required configs were set, invoking
@@ -56,7 +49,6 @@ public class Reference<T> {
   private ProtocolConfig protocolConfig;
 
   private RegistryConfig registryConfig;
-  private Registry registry;
   private volatile T ref;
 
   public void setClientConfig(ClientConfig clientConfig) {
@@ -95,23 +87,6 @@ public class Reference<T> {
       synchronized (this) {
         if (ref == null) {
           ServiceModel<T> serviceModel = ServiceModel.Parse(interfaceClass);
-
-          ConsumerMeta consumerMeta = new ConsumerMeta();
-          consumerMeta.setSerialization(protocolConfig.getSerializationType());
-          consumerMeta.setCodec(protocolConfig.getCodecType());
-          consumerMeta.setEndpoint(protocolConfig.getEndpointType());
-          consumerMeta.setHealthCheckPeriod(protocolConfig.getHeartbeatPeriod());
-          consumerMeta.setCluster(protocolConfig.getClusterType());
-          consumerMeta.setLoadBalance(protocolConfig.getLoadBalanceType());
-          consumerMeta.setRetryTimes(protocolConfig.getRetryTimes());
-          consumerMeta.setRecoveryPeriod(protocolConfig.getRecoveryPeriod());
-          consumerMeta.setDirectAddress(clientConfig.getAddresses());
-          consumerMeta.setTimeout(clientConfig.getTimeout());
-          consumerMeta.setServiceName(serviceModel.getServiceName());
-
-          Protocol protocol = ExtensionFactory.protocol().getExtension(ProtocolType.CATTY);
-          Consumer consumer = protocol.buildConsumer(consumerMeta);
-          ref = ConsumerHandler.getProxy(consumer, serviceModel);
         }
       }
     }
@@ -129,10 +104,6 @@ public class Reference<T> {
   }
 
   public void derefer() {
-    if (registry != null && registry.isOpen()) {
-      registry.close();
-      registry = null;
-    }
     logger.info("De-refer, service: {}", interfaceClass.getName());
   }
 }

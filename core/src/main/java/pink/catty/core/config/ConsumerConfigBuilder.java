@@ -16,7 +16,7 @@ package pink.catty.core.config;
 
 import java.util.LinkedList;
 import java.util.List;
-import pink.catty.core.Node;
+import pink.catty.core.support.Node;
 import pink.catty.core.config.definition.ConsumerDefinition;
 import pink.catty.core.config.definition.Define;
 

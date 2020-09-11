@@ -14,7 +14,7 @@
  */
 package pink.catty.config.api;
 
-import pink.catty.core.Node;
+import pink.catty.core.support.Node;
 import pink.catty.core.utils.NetUtils;
 
 /**

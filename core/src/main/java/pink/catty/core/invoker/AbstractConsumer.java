@@ -14,7 +14,7 @@
  */
 package pink.catty.core.invoker;
 
-import pink.catty.core.meta.ConsumerMeta;
+import pink.catty.core.config.ConsumerConfig;
 
 public abstract class AbstractConsumer
     extends AbstractInvoker
@@ -25,7 +25,7 @@ public abstract class AbstractConsumer
   }
 
   @Override
-  public ConsumerMeta getMeta() {
-    return (ConsumerMeta) next.getMeta();
+  public ConsumerConfig config() {
+    return (ConsumerConfig) next.config();
   }
 }

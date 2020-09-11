@@ -14,10 +14,10 @@
  */
 package pink.catty.core.invoker;
 
-import pink.catty.core.meta.ConsumerMeta;
+import pink.catty.core.config.ConsumerConfig;
 
 public interface Consumer extends LinkedInvoker {
 
   @Override
-  ConsumerMeta getMeta();
+  ConsumerConfig config();
 }

@@ -14,26 +14,22 @@
  */
 package pink.catty.config.api;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pink.catty.core.Constants;
-import pink.catty.core.Node;
 import pink.catty.core.config.RegistryConfig;
 import pink.catty.core.extension.ExtensionFactory;
 import pink.catty.core.extension.ExtensionType.ProtocolType;
 import pink.catty.core.extension.spi.EndpointFactory;
 import pink.catty.core.extension.spi.Protocol;
-import pink.catty.core.extension.spi.Registry;
 import pink.catty.core.invoker.Provider;
 import pink.catty.core.invoker.endpoint.Server;
-import pink.catty.core.meta.ProviderMeta;
-import pink.catty.core.meta.ServerMeta;
+import pink.catty.core.model.ServiceModel;
 import pink.catty.core.service.HeartBeatService;
 import pink.catty.core.service.HeartBeatServiceImpl;
-import pink.catty.core.model.ServiceModel;
-
-import java.util.HashMap;
-import java.util.Map;
+import pink.catty.core.support.Node;
 
 /**
  * Exporter is the entrance of RPC-server.
@@ -47,8 +43,6 @@ public class Exporter {
   private Map<String, Provider> serviceHandlers = new HashMap<>();
 
   private Server server;
-
-  private Registry registry;
 
   private ServerConfig serverConfig;
 
@@ -81,40 +75,17 @@ public class Exporter {
     ServiceModel serviceModel = ServiceModel.Parse(interfaceClass);
     serviceModel.setTarget(serviceObject);
 
-    ProviderMeta metaInfo = new ProviderMeta();
-    metaInfo.setLocalIp(address.getIp());
-    metaInfo.setLocalPort(address.getPort());
-    metaInfo.setSerialization(protocolConfig.getSerializationType());
-    metaInfo.setCodec(protocolConfig.getCodecType());
-    metaInfo.setEndpoint(protocolConfig.getEndpointType());
-    metaInfo.setWorkerThreadNum(serverConfig.getWorkerThreadNum());
-    metaInfo.setServiceName(serviceModel.getServiceName());
 
     Protocol chainBuilder = ExtensionFactory.protocol()
         .getExtension(ProtocolType.CATTY);
-    Provider provider = chainBuilder.buildProvider(metaInfo);
-    serviceHandlers.put(serviceModel.getServiceName(), provider);
     return this;
   }
 
   public void export() {
-    if (registry == null && registryConfig != null) {
-      registry = ExtensionFactory.registry()
-          .getExtension(registryConfig.getRegistryType());
-      registry.open();
-    }
     Node address = serverConfig.getServerAddress();
-    ServerMeta serverMeta = new ServerMeta();
-    serverMeta.setLocalIp(address.getIp());
-    serverMeta.setLocalPort(address.getPort());
-    serverMeta.setSerialization(protocolConfig.getSerializationType());
-    serverMeta.setCodec(protocolConfig.getCodecType());
-    serverMeta.setEndpoint(protocolConfig.getEndpointType());
-    serverMeta.setWorkerThreadNum(serverConfig.getWorkerThreadNum());
 
     EndpointFactory factory = ExtensionFactory.endpointFactory()
         .getExtension(protocolConfig.getEndpointType());
-    server = factory.getServer(serverMeta);
     if (server == null) {
       throw new NullPointerException("Server is not exist");
     }

@@ -29,7 +29,7 @@ public class FailOverCluster extends AbstractCluster {
   @Override
   public Response onError(Consumer invoker, Consumer failedConsumer, Request request,
       RuntimeException e) {
-    int retryLimit = invoker.getMeta().getRetryTimes();
+    int retryLimit = invoker.config().getRetryTimes();
 
     int alreadyRetry;
     Object alreadyRetryAttr = request.getAttribute(RETRY_TIMES);
@@ -41,7 +41,7 @@ public class FailOverCluster extends AbstractCluster {
 
     if (alreadyRetry >= retryLimit) {
       logger.error("FailOverCluster, reach retry limits after retry: {} times. meta: {}",
-          alreadyRetry, failedConsumer.getMeta(), e);
+          alreadyRetry, failedConsumer.config(), e);
       throw e;
     }
 

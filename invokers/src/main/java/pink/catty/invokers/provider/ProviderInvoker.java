@@ -16,6 +16,7 @@ package pink.catty.invokers.provider;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CompletionStage;
+import pink.catty.core.config.ProviderConfig;
 import pink.catty.core.invoker.Invoker;
 import pink.catty.core.invoker.Provider;
 import pink.catty.core.invoker.endpoint.Empty;
@@ -23,20 +24,19 @@ import pink.catty.core.invoker.endpoint.Void;
 import pink.catty.core.invoker.frame.DefaultResponse;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.ProviderMeta;
 import pink.catty.core.model.MethodModel;
 import pink.catty.core.utils.AsyncUtils;
 
 public class ProviderInvoker implements Provider {
 
-  private ProviderMeta meta;
+  private ProviderConfig meta;
 
-  public ProviderInvoker(ProviderMeta meta) {
+  public ProviderInvoker(ProviderConfig meta) {
     this.meta = meta;
   }
 
   @Override
-  public ProviderMeta getMeta() {
+  public ProviderConfig config() {
     return meta;
   }
 

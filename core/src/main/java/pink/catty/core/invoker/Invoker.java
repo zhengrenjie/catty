@@ -15,9 +15,9 @@
 package pink.catty.core.invoker;
 
 import pink.catty.core.CattyException;
+import pink.catty.core.config.Config;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.MetaInfo;
 
 /**
  * The most important interface which represent an rpc invocation. Every struct in catty which in
@@ -44,7 +44,7 @@ public interface Invoker {
   /**
    * @return the meta info of this Invoker.
    */
-  MetaInfo getMeta();
+  Config config();
 
   /**
    *

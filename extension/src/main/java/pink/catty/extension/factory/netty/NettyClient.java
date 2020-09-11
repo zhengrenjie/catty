@@ -25,15 +25,15 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import java.net.InetSocketAddress;
 import pink.catty.core.Constants;
 import pink.catty.core.EndpointInvalidException;
-import pink.catty.core.extension.spi.Codec;
+import pink.catty.core.config.ConsumerConfig;
 import pink.catty.core.extension.spi.Codec.DataTypeEnum;
 import pink.catty.core.invoker.endpoint.AbstractClient;
 import pink.catty.core.invoker.frame.DefaultResponse;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.ClientMeta;
 import pink.catty.core.model.MethodModel;
 
 public class NettyClient extends AbstractClient {
@@ -41,15 +41,15 @@ public class NettyClient extends AbstractClient {
   private Channel clientChannel;
   private NioEventLoopGroup nioEventLoopGroup;
 
-  public NettyClient(ClientMeta clientMeta, Codec codec) {
-    super(clientMeta, codec);
+  public NettyClient(ConsumerConfig config, InetSocketAddress remote) {
+    super(config, remote);
     nioEventLoopGroup = new NioEventLoopGroup(Constants.THREAD_NUMBER + 1);
   }
 
   @Override
   protected void doOpen() {
     Bootstrap bootstrap = new Bootstrap();
-    int connectTimeoutMillis = getMeta().getTimeout() > 0 ? getMeta().getTimeout()
+    int connectTimeoutMillis = config().getConnectTimeout() > 0 ? config().getConnectTimeout()
         : Constants.DEFAULT_CLIENT_TIMEOUT;
     bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeoutMillis);
     bootstrap.option(ChannelOption.TCP_NODELAY, true);
@@ -68,7 +68,7 @@ public class NettyClient extends AbstractClient {
     ChannelFuture future;
     try {
       future = bootstrap
-          .connect(getMeta().getRemoteIp(), getMeta().getRemotePort())
+          .connect(remoteAddress().getAddress(), remoteAddress().getPort())
           .sync();
       clientChannel = future.channel();
     } catch (InterruptedException i) {
@@ -85,6 +85,11 @@ public class NettyClient extends AbstractClient {
     if (nioEventLoopGroup != null && !nioEventLoopGroup.isShutdown()) {
       nioEventLoopGroup.shutdownGracefully();
     }
+  }
+
+  @Override
+  public InetSocketAddress localAddress() {
+    return (InetSocketAddress) clientChannel.localAddress();
   }
 
   @Override

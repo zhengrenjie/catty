@@ -17,33 +17,24 @@ package pink.catty.core.invoker.endpoint;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 import pink.catty.core.CattyException;
-import pink.catty.core.Constants;
-import pink.catty.core.extension.spi.Codec;
+import pink.catty.core.config.ProviderConfig;
 import pink.catty.core.invoker.Provider;
 import pink.catty.core.invoker.frame.DefaultRequest;
 import pink.catty.core.invoker.frame.DefaultResponse;
 import pink.catty.core.invoker.frame.Request;
 import pink.catty.core.invoker.frame.Response;
-import pink.catty.core.meta.ServerMeta;
 import pink.catty.core.model.MethodModel;
 import pink.catty.core.model.ServiceModel;
-import pink.catty.core.support.worker.HashLoopGroup;
-import pink.catty.core.support.worker.HashableChooserFactory;
-import pink.catty.core.support.worker.HashableExecutor;
-import pink.catty.core.support.worker.StandardThreadExecutor;
 
 public abstract class AbstractServer extends AbstractEndpoint implements Server {
 
   private final Map<String, Provider> invokerMap = new ConcurrentHashMap<>();
-  private final ServerMeta serverMeta;
-  private ExecutorService executor;
+  private final ProviderConfig config;
 
-  public AbstractServer(ServerMeta serverMeta, Codec codec) {
-    super(codec);
-    this.serverMeta = serverMeta;
-    createExecutor();
+  public AbstractServer(ProviderConfig config) {
+    super(config);
+    this.config = config;
   }
 
   @Override
@@ -62,8 +53,8 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server 
   }
 
   @Override
-  public ServerMeta getMeta() {
-    return serverMeta;
+  public ProviderConfig config() {
+    return config;
   }
 
   @Override
@@ -75,7 +66,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server 
           "No such provider found! RpcService name: " + request.getInterfaceName());
     }
 
-    ServiceModel serviceModel = ServiceModel.Of(provider.getMeta().getServiceName());
+    ServiceModel serviceModel = ServiceModel.Of(provider.config().getInterfaceName());
     MethodModel methodModel = serviceModel.getMethodMetaByName(request.getMethodName());
 
     if (methodModel == null) {
@@ -95,41 +86,9 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server 
     ));
   }
 
-  @Override
-  public ExecutorService getExecutor() {
-    return executor;
-  }
-
-  @Override
-  public void close() {
-    super.close();
-    if (executor instanceof HashableExecutor) {
-      ((HashableExecutor) executor).shutdownGracefully();
-    } else {
-      executor.shutdown();
-    }
-  }
-
   protected abstract void doOpen();
 
   protected abstract void doClose();
-
-  private void createExecutor() {
-    if (serverMeta.isNeedOrder()) {
-      int workerNum = serverMeta.getWorkerThreadNum() > 0 ? serverMeta.getWorkerThreadNum() :
-          Constants.THREAD_NUMBER * 2;
-      executor = new HashLoopGroup(workerNum, HashableChooserFactory.INSTANCE);
-    } else {
-      int minWorkerNum =
-          serverMeta.getMinWorkerThreadNum() > 0 ? serverMeta.getMinWorkerThreadNum() :
-              Constants.THREAD_NUMBER * 2;
-      int maxWorkerNum =
-          serverMeta.getMaxWorkerThreadNum() > 0 ? serverMeta.getMaxWorkerThreadNum() :
-              Constants.THREAD_NUMBER * 4;
-      executor = new StandardThreadExecutor(minWorkerNum, maxWorkerNum);
-      ((StandardThreadExecutor) executor).prestartAllCoreThreads();
-    }
-  }
 
   @Override
   public boolean equals(Object o) {
@@ -140,11 +99,11 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server 
       return false;
     }
     AbstractServer that = (AbstractServer) o;
-    return Objects.equals(serverMeta, that.serverMeta);
+    return Objects.equals(config, that.config);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(serverMeta);
+    return Objects.hash(config);
   }
 }

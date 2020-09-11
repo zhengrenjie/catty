@@ -14,13 +14,11 @@
  */
 package pink.catty.core.invoker.endpoint;
 
+import java.net.InetSocketAddress;
 import java.util.concurrent.Executor;
 import pink.catty.core.extension.spi.Codec;
-import pink.catty.core.meta.MetaInfo;
 
 public interface Endpoint {
-
-  MetaInfo getMeta();
 
   void open();
 
@@ -33,5 +31,9 @@ public interface Endpoint {
   Codec getCodec();
 
   Executor getExecutor();
+
+  InetSocketAddress localAddress();
+
+  InetSocketAddress remoteAddress();
 
 }

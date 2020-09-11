@@ -14,11 +14,16 @@
  */
 package pink.catty.core.invoker.endpoint;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pink.catty.core.EndpointIllegalStateException;
+import pink.catty.core.config.EndpointConfig;
+import pink.catty.core.extension.ExtensionFactory;
 import pink.catty.core.extension.spi.Codec;
+import pink.catty.core.support.worker.HashableExecutor;
+import pink.catty.core.support.worker.StandardThreadExecutor;
 
 public abstract class AbstractEndpoint implements Endpoint {
 
@@ -30,10 +35,14 @@ public abstract class AbstractEndpoint implements Endpoint {
 
   private final Codec codec;
   private AtomicInteger status;
+  private ExecutorService executor;
+  private final EndpointConfig config;
 
-  public AbstractEndpoint(Codec codec) {
+  public AbstractEndpoint(EndpointConfig config) {
     this.status = new AtomicInteger(NEW);
-    this.codec = codec;
+    this.config = config;
+    this.codec = ExtensionFactory.codec().getExtension(config.getCodec());
+    createExecutor();
   }
 
   @Override
@@ -52,14 +61,27 @@ public abstract class AbstractEndpoint implements Endpoint {
   }
 
   @Override
+  public ExecutorService getExecutor() {
+    return executor;
+  }
+
+  private void createExecutor() {
+    if (config.isUseWorkerThread()) {
+      int minWorkerNum = config.getWorkerMinNum();
+      int maxWorkerNum = config.getWorkerMaxNum();
+      executor = new StandardThreadExecutor(minWorkerNum, maxWorkerNum);
+      ((StandardThreadExecutor) executor).prestartAllCoreThreads();
+    }
+  }
+
+  @Override
   public void open() {
     if (status.compareAndSet(NEW, CONNECTED)) {
       doOpen();
-      logger.info("Opened an endpoint, {}", getMeta().toString());
+      logger.info("Opened an endpoint, {}", toString());
     } else {
       throw new EndpointIllegalStateException(
-          "Endpoint's status is illegal, status: " + status + " config: " + getMeta()
-              .toString());
+          "Endpoint's status is illegal, status: " + status + " config: " + toString());
     }
   }
 
@@ -69,16 +91,21 @@ public abstract class AbstractEndpoint implements Endpoint {
       return;
     }
     if (status.compareAndSet(CONNECTED, DISCONNECTED)) {
+      if (executor instanceof HashableExecutor) {
+        ((HashableExecutor) executor).shutdownGracefully();
+      } else {
+        executor.shutdown();
+      }
       doClose();
-      logger.info("Closed an endpoint, {}", getMeta().toString());
+      logger.info("Closed an endpoint, {}", toString());
     } else {
       throw new EndpointIllegalStateException(
-          "Endpoint's status is illegal, status: " + status + " config: " + getMeta()
-              .toString());
+          "Endpoint's status is illegal, status: " + status + " config: " + toString());
     }
   }
 
   protected abstract void doOpen();
 
   protected abstract void doClose();
+
 }

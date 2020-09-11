@@ -27,7 +27,7 @@ public class FailFastCluster extends AbstractCluster {
   @Override
   public Response onError(Consumer invoker, Consumer failedConsumer, Request request,
       RuntimeException e) {
-    logger.error("FailFastCluster, meta: {}", failedConsumer.getMeta(), e);
+    logger.error("FailFastCluster, meta: {}", failedConsumer.config(), e);
     throw e;
   }
 }

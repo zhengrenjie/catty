@@ -17,7 +17,7 @@ package pink.catty.config.api;
 import java.util.ArrayList;
 import java.util.List;
 import pink.catty.core.CattyException;
-import pink.catty.core.Node;
+import pink.catty.core.support.Node;
 
 /**
  * @deprecated by 0.2.6

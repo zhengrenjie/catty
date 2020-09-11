@@ -14,14 +14,14 @@
  */
 package pink.catty.extension.factory;
 
+import java.net.InetSocketAddress;
+import pink.catty.core.config.ConsumerConfig;
+import pink.catty.core.config.ProviderConfig;
 import pink.catty.core.extension.Extension;
 import pink.catty.core.extension.ExtensionType.EndpointFactoryType;
 import pink.catty.core.extension.spi.AbstractEndpointFactory;
-import pink.catty.core.extension.spi.Codec;
 import pink.catty.core.invoker.endpoint.Client;
 import pink.catty.core.invoker.endpoint.Server;
-import pink.catty.core.meta.ClientMeta;
-import pink.catty.core.meta.ServerMeta;
 import pink.catty.extension.factory.netty.NettyClient;
 import pink.catty.extension.factory.netty.NettyServer;
 
@@ -29,12 +29,12 @@ import pink.catty.extension.factory.netty.NettyServer;
 public class NettyEndpointFactory extends AbstractEndpointFactory {
 
   @Override
-  protected Client doCreateClient(ClientMeta clientMeta, Codec codec) {
-    return new NettyClient(clientMeta, codec);
+  protected Client doCreateClient(ConsumerConfig config, InetSocketAddress address) {
+    return new NettyClient(config, address);
   }
 
   @Override
-  protected Server doCreateServer(ServerMeta serverMeta, Codec codec) {
-    return new NettyServer(serverMeta, codec);
+  protected Server doCreateServer(ProviderConfig config) {
+    return new NettyServer(config);
   }
 }
